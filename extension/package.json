@@ -1,8 +1,8 @@
 {
   "name": "adels-grimoire",
   "displayName": "Adel's Grimoire",
-  "description": "SystemVerilog and UVM documentation on hover, plus Jasper CDC/RDC and Superlint violation squiggles",
-  "version": "1.0.0",
+  "description": "Hover documentation for every SystemVerilog keyword and the UVM library, plus Jasper CDC/RDC and Superlint violations as squiggles",
+  "version": "1.0.1",
   "publisher": "adel-saer-aljaed",
   "author": {
     "name": "Adel Saer F. Aljaed"
@@ -71,7 +71,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SincerelyAdel/grimoire-public.git"
+    "url": "https://github.com/SincerelyAdel/grimoire-public"
   },
   "bugs": {
     "url": "https://github.com/SincerelyAdel/grimoire-public/issues"

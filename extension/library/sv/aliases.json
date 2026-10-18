@@ -1,0 +1,21 @@
+{
+  "end": "begin",
+  "endcase": "case",
+  "endchecker": "checker",
+  "endclass": "class",
+  "endclocking": "clocking",
+  "endconfig": "config",
+  "endfunction": "function",
+  "endgenerate": "generate",
+  "endgroup": "covergroup",
+  "endinterface": "interface",
+  "endmodule": "module",
+  "endpackage": "package",
+  "endprimitive": "primitive",
+  "endprogram": "program",
+  "endproperty": "property",
+  "endspecify": "specify",
+  "endsequence": "sequence",
+  "endtable": "table",
+  "endtask": "task"
+}

@@ -6,7 +6,7 @@ Explains SystemVerilog keywords and UVM names where you read them, and puts Jasp
 
 ### Keyword help on hover
 
-Hover any SystemVerilog keyword, such as `always_ff`, `logic` or `modport`, to see what it does, the rules that apply to it and a short example.
+Hover any of the 248 SystemVerilog keywords, such as `always_ff`, `begin`, `constraint` or `throughout`, to see what it does, the rules that apply to it and a short example. Closing keywords lead to the keyword they close: `end` opens `begin`, `endmodule` opens `module`.
 
 ### UVM help on hover
 
