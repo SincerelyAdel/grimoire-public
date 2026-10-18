@@ -4,6 +4,22 @@ const path = require('path');
 const ALIASES = 'aliases.json';
 const PARAMS = /\bparams\s+([A-Z][A-Z0-9_]*)\s*\{([^}]*)/g;
 const cache = new Map();
+const listings = new Map();
+
+function has(dir, file) {
+  let stamp;
+  try {
+    stamp = fs.statSync(dir).mtimeMs;
+  } catch (err) {
+    return false;
+  }
+  let cached = listings.get(dir);
+  if (!cached || cached.stamp !== stamp) {
+    cached = { stamp, names: new Set(fs.readdirSync(dir)) };
+    listings.set(dir, cached);
+  }
+  return cached.names.has(file);
+}
 
 function toRegExp(glob) {
   const body = glob
@@ -49,9 +65,8 @@ function resolve(dirs, word) {
   const names = candidates(word);
   for (const name of names) {
     for (const dir of dirs) {
-      const file = path.join(dir, name + '.md');
-      if (fs.existsSync(file)) {
-        return file;
+      if (has(dir, name + '.md')) {
+        return path.join(dir, name + '.md');
       }
     }
   }
@@ -61,9 +76,8 @@ function resolve(dirs, word) {
         if (!rule.pattern.test(name)) {
           continue;
         }
-        const file = path.join(dir, rule.page + '.md');
-        if (fs.existsSync(file)) {
-          return file;
+        if (has(dir, rule.page + '.md')) {
+          return path.join(dir, rule.page + '.md');
         }
       }
     }

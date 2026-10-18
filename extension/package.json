@@ -28,6 +28,14 @@
     "lint"
   ],
   "main": "./extension.js",
+  "files": [
+    "extension.js",
+    "lookup.js",
+    "report.js",
+    "icon.png",
+    "LICENSE.txt",
+    "library/**"
+  ],
   "extensionDependencies": [
     "hudson-river-trading.vscode-slang"
   ],

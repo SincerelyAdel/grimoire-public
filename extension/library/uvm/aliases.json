@@ -1,4 +1,9 @@
 {
+  "UVM_WARNING": "UVM_WARNING_severity",
+  "UVM_INFO": "UVM_INFO_severity",
+  "UVM_FATAL": "UVM_FATAL_severity",
+  "UVM_ERROR": "UVM_ERROR_severity",
+  "UVM_VERBOSITY": "UVM_VERBOSITY_option",
   "uvm_component_utils_end": "uvm_component_utils_begin",
   "uvm_component_param_utils_begin": "uvm_component_param_utils",
   "uvm_object_utils_end": "uvm_object_utils_begin",
@@ -41,7 +46,6 @@
   "UVM_MAX_STREAMBITS": "uvm_bitstream_t",
   "UVM_STREAMBITS": "uvm_bitstream_t",
   "uvm_integral_t": "uvm_bitstream_t",
-
   "uvm_void": "uvm_object",
   "uvm_sequence_library*": "uvm_sequence",
   "uvm_random_sequence": "uvm_sequence",
@@ -61,7 +65,6 @@
   "uvm_in_order_comparator": "uvm_scoreboard",
   "uvm_built_in_*": "uvm_scoreboard",
   "uvm_class_*": "uvm_scoreboard",
-
   "uvm_report_warning": "uvm_report_info",
   "uvm_report_error": "uvm_report_info",
   "uvm_report_fatal": "uvm_report_info",
@@ -90,7 +93,6 @@
   "set_max_quit_count": "uvm_report_server",
   "get_max_quit_count": "uvm_report_server",
   "print_catcher": "uvm_report_catcher",
-
   "uvm_*_printer": "uvm_printer",
   "uvm_default_printer": "uvm_printer",
   "uvm_printer_knobs": "uvm_printer",
@@ -111,7 +113,6 @@
   "uvm_tr_stream": "uvm_recorder",
   "uvm_text_*": "uvm_recorder",
   "record_field*": "uvm_recorder",
-
   "UVM_DEFAULT": "UVM_ALL_ON",
   "UVM_FLAGS_ON": "UVM_ALL_ON",
   "UVM_COPY": "UVM_ALL_ON",
@@ -131,7 +132,6 @@
   "UVM_DEEP": "UVM_ALL_ON",
   "UVM_SHALLOW": "UVM_ALL_ON",
   "UVM_REFERENCE": "UVM_ALL_ON",
-
   "uvm_radix_enum": "UVM_HEX",
   "UVM_BIN": "UVM_HEX",
   "UVM_DEC": "UVM_HEX",
@@ -143,12 +143,10 @@
   "UVM_REAL*": "UVM_HEX",
   "UVM_UNFORMAT*": "UVM_HEX",
   "UVM_NORADIX": "UVM_HEX",
-
   "UVM_SEQ_ARB_*": "uvm_sequencer_arb_mode",
   "SEQ_ARB_*": "uvm_sequencer_arb_mode",
   "user_priority_arbitration": "uvm_sequencer_arb_mode",
   "get_arbitration": "set_arbitration",
-
   "UVM_PHASE_TRACE": "UVM_OBJECTION_TRACE",
   "UVM_*_TRACE": "UVM_OBJECTION_TRACE",
   "UVM_DEFAULT_TIMEOUT": "UVM_TIMEOUT",
@@ -159,7 +157,6 @@
   "uvm_cmdline_proc": "uvm_cmdline_processor",
   "get_arg_*": "uvm_cmdline_processor",
   "get_plusargs": "uvm_cmdline_processor",
-
   "UVM_PHASE_*": "uvm_phase_state",
   "uvm_wait_op": "uvm_phase_state",
   "UVM_EQ": "uvm_phase_state",
@@ -181,7 +178,6 @@
   "*_configure_phase": "configure_phase",
   "*_main_phase": "main_phase",
   "*_shutdown_phase": "shutdown_phase",
-
   "uvm_objection_callback": "uvm_objection",
   "uvm_callbacks_objection": "uvm_objection",
   "uvm_objection_event": "uvm_objection",
@@ -198,14 +194,12 @@
   "stop_request": "global_stop_request",
   "set_global_timeout": "global_stop_request",
   "set_global_stop_timeout": "global_stop_request",
-
   "uvm_heartbeat_modes": "uvm_heartbeat",
   "uvm_heartbeat_callback": "uvm_heartbeat",
   "UVM_ALL_ACTIVE": "uvm_heartbeat",
   "UVM_ANY_ACTIVE": "uvm_heartbeat",
   "UVM_ONE_ACTIVE": "uvm_heartbeat",
   "UVM_NO_HB_MODE": "uvm_heartbeat",
-
   "uvm_config_db_options": "uvm_config_db",
   "uvm_config_int": "uvm_config_db",
   "uvm_config_string": "uvm_config_db",
@@ -219,7 +213,6 @@
   "check_config_usage": "print_config",
   "set_config_*": "set_config_int",
   "get_config_*": "set_config_int",
-
   "set_type_override_by_*": "set_type_override",
   "set_inst_override_by_*": "set_inst_override",
   "create_object": "create_component",
@@ -231,7 +224,6 @@
   "uvm_factory_*": "uvm_factory",
   "uvm_default_factory": "uvm_factory",
   "uvm_default_coreservice_t": "uvm_coreservice_t",
-
   "uvm_event_base": "uvm_event",
   "uvm_event_callback": "uvm_event",
   "wait_trigger*": "uvm_event",
@@ -247,7 +239,6 @@
   "uvm_apprepend": "uvm_callbacks",
   "UVM_APPEND": "uvm_callbacks",
   "UVM_PREPEND": "uvm_callbacks",
-
   "post_body": "pre_body",
   "post_start": "pre_start",
   "mid_do": "pre_do",
@@ -278,7 +269,6 @@
   "UVM_ENDED": "uvm_sequence_base",
   "UVM_STOPPED": "uvm_sequence_base",
   "UVM_FINISHED": "uvm_sequence_base",
-
   "do_unpack": "do_pack",
   "set_name": "get_name",
   "get_children": "get_parent",
@@ -291,7 +281,6 @@
   "accept_tr": "uvm_transaction",
   "get_event_pool": "uvm_transaction",
   "get_transaction_id": "uvm_transaction",
-
   "uvm_tlm_transport_channel": "uvm_tlm_req_rsp_channel",
   "uvm_tlm_fifo_base": "uvm_tlm_fifo",
   "uvm_tlm_*": "uvm_tlm_generic_payload",
@@ -328,7 +317,6 @@
   "slave_export": "uvm_tlm_req_rsp_channel",
   "request_ap": "uvm_tlm_req_rsp_channel",
   "response_ap": "uvm_tlm_req_rsp_channel",
-
   "uvm_reg_*_seq": "uvm_reg_hw_reset_seq",
   "uvm_mem_*_seq": "uvm_reg_hw_reset_seq",
   "UVM_DO_*": "uvm_reg_hw_reset_seq",
