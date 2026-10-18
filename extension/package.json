@@ -1,8 +1,8 @@
 {
   "name": "adels-grimoire",
   "displayName": "Adel's Grimoire",
-  "description": "Hover documentation for every SystemVerilog keyword and the UVM library, plus Jasper CDC/RDC and Superlint violations as squiggles",
-  "version": "1.0.1",
+  "description": "Hover documentation for every SystemVerilog keyword and the UVM library",
+  "version": "1.0.2",
   "publisher": "adel-saer-aljaed",
   "author": {
     "name": "Adel Saer F. Aljaed"
@@ -12,8 +12,7 @@
     "vscode": "^1.80.0"
   },
   "categories": [
-    "Programming Languages",
-    "Linters"
+    "Programming Languages"
   ],
   "keywords": [
     "systemverilog",
@@ -21,19 +20,17 @@
     "uvm",
     "hover",
     "documentation",
-    "cdc",
-    "rdc",
-    "jasper",
-    "superlint",
-    "lint"
+    "reference",
+    "keywords"
   ],
   "main": "./extension.js",
   "files": [
     "extension.js",
     "lookup.js",
-    "report.js",
     "icon.png",
     "LICENSE.txt",
+    "README.md",
+    "CHANGELOG.md",
     "library/**"
   ],
   "extensionDependencies": [
@@ -43,12 +40,6 @@
     "onStartupFinished"
   ],
   "contributes": {
-    "commands": [
-      {
-        "command": "grimoire.reloadReports",
-        "title": "Grimoire: Reload CDC/RDC Reports"
-      }
-    ],
     "configuration": {
       "title": "Grimoire",
       "properties": {
@@ -58,12 +49,7 @@
             "type": "string"
           },
           "default": [],
-          "description": "Extra documentation folders, searched before the built-in SystemVerilog and UVM pages. Each holds subfolders of <name>.md pages; the sv and uvm subfolders apply only to SystemVerilog files and the params subfolder only to Tcl files."
-        },
-        "grimoire.reportGlob": {
-          "type": "string",
-          "default": "**/reports/{violations,superlint}.csv",
-          "description": "Workspace glob for Jasper CDC/RDC and Superlint violation CSV reports to show as diagnostics. Empty disables them."
+          "description": "Extra documentation folders, searched before the built-in SystemVerilog and UVM pages. Each holds subfolders of <name>.md pages; the sv and uvm subfolders apply only to SystemVerilog files, any other subfolder to every file."
         }
       }
     }

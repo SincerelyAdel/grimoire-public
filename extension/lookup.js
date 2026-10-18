@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 
 const ALIASES = 'aliases.json';
-const PARAMS = /\bparams\s+([A-Z][A-Z0-9_]*)\s*\{([^}]*)/g;
 const cache = new Map();
 const listings = new Map();
 
@@ -59,7 +58,7 @@ function candidates(word) {
 }
 
 function resolve(dirs, word) {
-  if (!/^[`$]?[\w$]+(\.\w+)?$/.test(word)) {
+  if (!/^[`$]?[\w$]+$/.test(word)) {
     return undefined;
   }
   const names = candidates(word);
@@ -85,14 +84,4 @@ function resolve(dirs, word) {
   return undefined;
 }
 
-function paramsOwner(line, column) {
-  for (const match of line.matchAll(PARAMS)) {
-    const start = match.index + match[0].length - match[2].length;
-    if (column >= start && column <= start + match[2].length) {
-      return match[1];
-    }
-  }
-  return undefined;
-}
-
-module.exports = { resolve, toRegExp, paramsOwner };
+module.exports = { resolve, toRegExp };

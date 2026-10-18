@@ -1,5 +1,4 @@
 const assert = require('assert');
-const fs = require('fs');
 const path = require('path');
 const lookup = require('../extension/lookup');
 
@@ -91,9 +90,6 @@ for (const [word, want] of cases) {
     console.log(`FAIL ${word}: got ${rel}, want ${want}`);
   }
 }
-
-const tclDirs = [path.join(library, 'jasper')].filter((d) => fs.existsSync(d));
-assert.strictEqual(lookup.resolve(tclDirs, 'uvm_component'), undefined);
 
 assert.ok(lookup.toRegExp('uvm_*_port').test('uvm_blocking_put_port'));
 assert.ok(!lookup.toRegExp('uvm_*_port').test('xuvm_blocking_put_port'));

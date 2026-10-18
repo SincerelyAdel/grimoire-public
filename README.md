@@ -1,6 +1,6 @@
 # Adel's Grimoire
 
-A VS Code extension that explains SystemVerilog keywords and UVM names on hover, and shows Jasper CDC/RDC and Superlint violations as squiggles. See [extension/README.md](extension/README.md) for the features.
+A VS Code extension that explains SystemVerilog keywords and UVM names on hover. See [extension/README.md](extension/README.md) for the features.
 
 ## Layout
 
