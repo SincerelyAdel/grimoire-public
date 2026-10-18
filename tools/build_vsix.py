@@ -23,10 +23,21 @@ MANIFEST = """<?xml version="1.0" encoding="utf-8"?>
     <Identity Language="en-US" Id="{name}" Version="{version}" Publisher="{publisher}"/>
     <DisplayName>{displayName}</DisplayName>
     <Description xml:space="preserve">{description}</Description>
+    <Tags>{tags}</Tags>
     <Categories>{categories}</Categories>
+    <GalleryFlags>Public</GalleryFlags>
     <Icon>extension/{icon}</Icon>
     <Properties>
       <Property Id="Microsoft.VisualStudio.Code.Engine" Value="{engine}"/>
+      <Property Id="Microsoft.VisualStudio.Code.ExtensionDependencies" Value="{dependencies}"/>
+      <Property Id="Microsoft.VisualStudio.Code.ExtensionPack" Value=""/>
+      <Property Id="Microsoft.VisualStudio.Code.ExtensionKind" Value="workspace"/>
+      <Property Id="Microsoft.VisualStudio.Services.Links.Source" Value="{repo}"/>
+      <Property Id="Microsoft.VisualStudio.Services.Links.GitHub" Value="{repo}"/>
+      <Property Id="Microsoft.VisualStudio.Services.Links.Support" Value="{bugs}"/>
+      <Property Id="Microsoft.VisualStudio.Services.Links.Learn" Value="{homepage}"/>
+      <Property Id="Microsoft.VisualStudio.Services.GitHubFlavoredMarkdown" Value="true"/>
+      <Property Id="Microsoft.VisualStudio.Services.Content.Pricing" Value="Free"/>
     </Properties>
   </Metadata>
   <Installation>
@@ -47,7 +58,16 @@ MANIFEST = """<?xml version="1.0" encoding="utf-8"?>
 def main():
     pkg = json.loads((EXT / "package.json").read_text())
     out = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / f"{pkg['name']}-{pkg['version']}.vsix"
-    fields = dict(pkg, engine=pkg["engines"]["vscode"], categories=",".join(pkg["categories"]))
+    fields = dict(
+        pkg,
+        engine=pkg["engines"]["vscode"],
+        categories=",".join(pkg["categories"]),
+        tags=",".join(pkg.get("keywords", [])),
+        dependencies=",".join(pkg.get("extensionDependencies", [])),
+        repo=pkg.get("repository", {}).get("url", ""),
+        bugs=pkg.get("bugs", {}).get("url", ""),
+        homepage=pkg.get("homepage", ""),
+    )
     manifest = MANIFEST.format(**fields)
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         z.writestr("[Content_Types].xml", CONTENT_TYPES)
