@@ -45,6 +45,7 @@ A library folder holds subfolders, and each subfolder holds one `<name>.md` file
 - Any other subfolder applies everywhere.
 - A page in your folders wins over a built-in page with the same name.
 - The first line of a page is its title, written as ``**`name`** — summary``.
+- Pages can show images and GIFs saved next to them, as `![waveform](fork.gif)` or, to set the size, `<img src="fork.gif" width="480">`.
 
 A subfolder can also hold an `aliases.json` file that points other names at an existing page. Keys are names or `*` globs, values are page names, and the first match wins:
 

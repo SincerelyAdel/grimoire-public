@@ -47,7 +47,10 @@ function provideHover(document, position) {
   } catch (err) {
     return undefined;
   }
-  return new vscode.Hover(new vscode.MarkdownString(text), range);
+  const md = new vscode.MarkdownString(text);
+  md.baseUri = vscode.Uri.file(path.dirname(file) + path.sep);
+  md.supportHtml = true;
+  return new vscode.Hover(md, range);
 }
 
 function activate(context) {

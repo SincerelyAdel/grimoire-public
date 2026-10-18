@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parent.parent
 LIBRARY = ROOT / "extension" / "library"
 TITLE = re.compile(r"^\*\*`.+`\*\* — \S")
 REFERENCE = re.compile(r"`([A-Za-z_][\w$]*)`")
+IMAGE = re.compile(r"""!\[[^\]]*\]\(([^)\s]+)|<img[^>]*\ssrc=["']([^"']+)["']""")
 
 
 def check_folder(folder):
@@ -31,6 +32,14 @@ def check_folder(folder):
             problems.append(f"{page.name}: unbalanced code fence")
         if not text.endswith("\n"):
             problems.append(f"{page.name}: no trailing newline")
+        for match in IMAGE.finditer(text):
+            src = match.group(1) or match.group(2)
+            if re.match(r"^[a-z]+:", src):
+                continue
+            if not (folder / src).is_file():
+                problems.append(f"{page.name}: image {src} not found")
+            elif src != src.lower():
+                problems.append(f"{page.name}: image {src} is not lowercase")
         for line in lines:
             if not line.startswith("**See also**"):
                 continue
