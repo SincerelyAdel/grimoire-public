@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2b2350"/>
+      <stop offset="1" stop-color="#151127"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="48" fill="url(#bg)"/>
+  <path d="M34 78 C68 62 100 64 128 82 C156 64 188 62 222 78 L222 196 C188 182 156 184 128 202 C100 184 68 182 34 196 Z" fill="#8a6f2c"/>
+  <path d="M44 72 C74 58 102 60 128 78 L128 192 C102 174 74 172 44 186 Z" fill="#f3ead6"/>
+  <path d="M212 72 C182 58 154 60 128 78 L128 192 C154 174 182 172 212 186 Z" fill="#fbf5e6"/>
+  <path d="M128 78 L128 192" stroke="#b9a877" stroke-width="3"/>
+  <g fill="none" stroke-width="7" stroke-linecap="round">
+    <path d="M58 92 h14" stroke="#8250df"/>
+    <path d="M82 92 h26" stroke="#3b6fd4"/>
+    <path d="M68 110 h10" stroke="#8250df"/>
+    <path d="M88 110 h22" stroke="#4a3f78"/>
+    <path d="M78 128 h18" stroke="#2f8f6b"/>
+    <path d="M106 128 h8" stroke="#c2572b"/>
+    <path d="M68 146 h20" stroke="#4a3f78"/>
+    <path d="M58 164 h16" stroke="#8250df"/>
+    <path d="M146 92 h12" stroke="#8250df"/>
+    <path d="M168 92 h28" stroke="#3b6fd4"/>
+    <path d="M156 110 h20" stroke="#2f8f6b"/>
+    <path d="M186 110 h12" stroke="#4a3f78"/>
+    <path d="M156 128 h10" stroke="#4a3f78"/>
+    <path d="M176 128 h24" stroke="#3b6fd4"/>
+    <path d="M146 164 h16" stroke="#8250df"/>
+  </g>
+  <path d="M176 142 l4 -5 l4 5 l4 -5 l4 5 l4 -5 l4 5" fill="none" stroke="#e5484d" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

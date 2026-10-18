@@ -1,0 +1,72 @@
+{
+  "name": "adels-grimoire",
+  "displayName": "Adel's Grimoire",
+  "description": "SystemVerilog and UVM documentation on hover, plus Jasper CDC/RDC and Superlint violation squiggles",
+  "version": "1.0.0",
+  "publisher": "adel-saer-aljaed",
+  "author": {
+    "name": "Adel Saer F. Aljaed"
+  },
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters"
+  ],
+  "keywords": [
+    "systemverilog",
+    "verilog",
+    "uvm",
+    "hover",
+    "documentation",
+    "cdc",
+    "rdc",
+    "jasper",
+    "superlint",
+    "lint"
+  ],
+  "main": "./extension.js",
+  "extensionDependencies": [
+    "hudson-river-trading.vscode-slang"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "grimoire.reloadReports",
+        "title": "Grimoire: Reload CDC/RDC Reports"
+      }
+    ],
+    "configuration": {
+      "title": "Grimoire",
+      "properties": {
+        "grimoire.libraryPaths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "Extra documentation folders, searched before the built-in SystemVerilog and UVM pages. Each holds subfolders of <name>.md pages; the sv and uvm subfolders apply only to SystemVerilog files and the params subfolder only to Tcl files."
+        },
+        "grimoire.reportGlob": {
+          "type": "string",
+          "default": "**/reports/{violations,superlint}.csv",
+          "description": "Workspace glob for Jasper CDC/RDC and Superlint violation CSV reports to show as diagnostics. Empty disables them."
+        }
+      }
+    }
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SincerelyAdel/grimoire-public.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SincerelyAdel/grimoire-public/issues"
+  },
+  "homepage": "https://github.com/SincerelyAdel/grimoire-public#readme"
+}
