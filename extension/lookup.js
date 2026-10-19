@@ -53,6 +53,18 @@ function aliases(dir) {
   return rules;
 }
 
+// A page is <name>/<name>.md, or a flat <name>.md in older libraries.
+function page(dir, name) {
+  const folder = path.join(dir, name);
+  if (has(folder, name + '.md')) {
+    return path.join(folder, name + '.md');
+  }
+  if (has(dir, name + '.md')) {
+    return path.join(dir, name + '.md');
+  }
+  return undefined;
+}
+
 function candidates(word) {
   return /^[`$]/.test(word) ? [word, word.slice(1)] : [word];
 }
@@ -64,8 +76,9 @@ function resolve(dirs, word) {
   const names = candidates(word);
   for (const name of names) {
     for (const dir of dirs) {
-      if (has(dir, name + '.md')) {
-        return path.join(dir, name + '.md');
+      const file = page(dir, name);
+      if (file) {
+        return file;
       }
     }
   }
@@ -75,8 +88,9 @@ function resolve(dirs, word) {
         if (!rule.pattern.test(name)) {
           continue;
         }
-        if (has(dir, rule.page + '.md')) {
-          return path.join(dir, rule.page + '.md');
+        const file = page(dir, rule.page);
+        if (file) {
+          return file;
         }
       }
     }

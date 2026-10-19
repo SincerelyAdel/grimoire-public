@@ -1,4 +1,6 @@
 const assert = require('assert');
+const fs = require('fs');
+const os = require('os');
 const path = require('path');
 const lookup = require('../extension/lookup');
 
@@ -84,7 +86,7 @@ const cases = [
 let failed = 0;
 for (const [word, want] of cases) {
   const got = lookup.resolve(dirs, word);
-  const rel = got && path.relative(library, got).replace(/\.md$/, '').split(path.sep).join('/');
+  const rel = got && path.relative(library, path.dirname(got)).split(path.sep).join('/');
   if (rel !== want) {
     failed++;
     console.log(`FAIL ${word}: got ${rel}, want ${want}`);
@@ -94,6 +96,16 @@ for (const [word, want] of cases) {
 assert.ok(lookup.toRegExp('uvm_*_port').test('uvm_blocking_put_port'));
 assert.ok(!lookup.toRegExp('uvm_*_port').test('xuvm_blocking_put_port'));
 assert.ok(!lookup.toRegExp('a.b').test('axb'));
+
+// Older libraries keep flat <name>.md pages; a tag folder wins over a flat page.
+const legacy = fs.mkdtempSync(path.join(os.tmpdir(), 'grimoire-'));
+fs.writeFileSync(path.join(legacy, 'flat.md'), 'flat');
+fs.mkdirSync(path.join(legacy, 'both'));
+fs.writeFileSync(path.join(legacy, 'both', 'both.md'), 'folder');
+fs.writeFileSync(path.join(legacy, 'both.md'), 'flat');
+assert.strictEqual(lookup.resolve([legacy], 'flat'), path.join(legacy, 'flat.md'));
+assert.strictEqual(lookup.resolve([legacy], 'both'), path.join(legacy, 'both', 'both.md'));
+fs.rmSync(legacy, { recursive: true });
 
 console.log(`${cases.length - failed}/${cases.length} lookups passed`);
 process.exit(failed ? 1 : 0);

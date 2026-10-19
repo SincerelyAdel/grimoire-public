@@ -35,7 +35,7 @@ The SystemVerilog and UVM pages are built in, so hover help works straight away.
 
 ## Adding your own pages
 
-A library folder holds subfolders, and each subfolder holds one `<name>.md` file per word. List the folder in `grimoire.libraryPaths`:
+A library folder holds subfolders, and each subfolder holds one folder per word, named after it, with the page inside as `<name>/<name>.md`. A plain `<name>.md` file also works. List the library folder in `grimoire.libraryPaths`:
 
 ```json
 "grimoire.libraryPaths": ["/path/to/my-library"]
