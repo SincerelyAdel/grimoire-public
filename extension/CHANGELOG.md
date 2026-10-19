@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.5
+
+- Slang is set up for UVM automatically in workspaces that use it, from `UVM_HOME` or the bundled Accellera UVM 2020.3.1, so UVM code completes without errors.
+- New commands: **Grimoire: Set UVM Path**, **Grimoire: Enable** and **Grimoire: Disable**, with the `grimoire.uvmPath` and `grimoire.enabled` settings.
+- Grimoire's page shows above slang's hover.
+- New demo GIFs on this page.
+
 ## 1.0.4
 
 - 105 words now end their hover with an animation of their coding example: registers, gates, processes, `fork`/`join`, branching, assertions, and the UVM phases, objections, sequence-driver handshake, analysis ports, FIFOs and agents.

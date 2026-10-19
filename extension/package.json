@@ -2,7 +2,7 @@
   "name": "adels-grimoire",
   "displayName": "Adel's Grimoire",
   "description": "Hover documentation for every SystemVerilog keyword and the UVM library",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "publisher": "adel-saer-aljaed",
   "author": {
     "name": "Adel Saer F. Aljaed"
