@@ -54,5 +54,14 @@
       }
     }
   },
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SincerelyAdel/grimoire-public",
+    "directory": "extension"
+  },
+  "bugs": {
+    "url": "https://github.com/SincerelyAdel/grimoire-public/issues"
+  },
+  "homepage": "https://github.com/SincerelyAdel/grimoire-public#readme"
 }
