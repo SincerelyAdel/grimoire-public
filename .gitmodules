@@ -1,0 +1,3 @@
+[submodule "extension/uvm-core"]
+	path = extension/uvm-core
+	url = https://github.com/accellera-official/uvm-core

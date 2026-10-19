@@ -1,2 +1,4 @@
 *.vsix
 __pycache__/
+.slang/
+ANIMATIONS.md

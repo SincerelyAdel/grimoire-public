@@ -27,11 +27,15 @@
   "files": [
     "extension.js",
     "lookup.js",
+    "uvm.js",
     "icon.png",
     "LICENSE.txt",
     "README.md",
     "CHANGELOG.md",
-    "library/**"
+    "library/**",
+    "uvm-core/src/**",
+    "uvm-core/LICENSE.txt",
+    "uvm-core/NOTICE.txt"
   ],
   "extensionDependencies": [
     "hudson-river-trading.vscode-slang"
@@ -40,9 +44,48 @@
     "onStartupFinished"
   ],
   "contributes": {
+    "commands": [
+      {
+        "command": "grimoire.enable",
+        "title": "Enable",
+        "category": "Grimoire"
+      },
+      {
+        "command": "grimoire.disable",
+        "title": "Disable",
+        "category": "Grimoire"
+      },
+      {
+        "command": "grimoire.setUvmPath",
+        "title": "Set UVM Path",
+        "category": "Grimoire"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "grimoire.enable",
+          "when": "!grimoire.enabled"
+        },
+        {
+          "command": "grimoire.disable",
+          "when": "grimoire.enabled"
+        }
+      ]
+    },
     "configuration": {
       "title": "Grimoire",
       "properties": {
+        "grimoire.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show Grimoire hovers and keep slang pointed at a UVM library. Also toggled with the Grimoire: Enable and Grimoire: Disable commands."
+        },
+        "grimoire.uvmPath": {
+          "type": "string",
+          "default": "",
+          "description": "UVM library for slang, as the UVM folder or its src folder. Empty uses UVM_HOME, or the UVM bundled with Grimoire when UVM_HOME is not set. Also set with the Grimoire: Set UVM Path command."
+        },
         "grimoire.libraryPaths": {
           "type": "array",
           "items": {
