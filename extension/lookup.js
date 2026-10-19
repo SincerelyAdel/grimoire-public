@@ -98,4 +98,35 @@ function resolve(dirs, word) {
   return undefined;
 }
 
-module.exports = { resolve, toRegExp };
+const IMAGE = /(!\[[^\]]*\]\(|<img\b[^>]*\bsrc=["'])([^)"'\s]+)/g;
+
+// Point each image at its <name>.<theme>.<ext> file when the page's folder has one.
+function themed(text, dir, theme) {
+  return text.replace(IMAGE, (match, lead, src) => {
+    const dot = src.lastIndexOf('.');
+    if (/^[a-z]+:/i.test(src) || src.includes('/') || dot <= 0) {
+      return match;
+    }
+    const variant = src.slice(0, dot) + '.' + theme + src.slice(dot);
+    return has(dir, variant) ? lead + variant : match;
+  });
+}
+
+// Split a page at its --- lines, outside code fences, into separate hover sections.
+function sections(text) {
+  const parts = [[]];
+  let fenced = false;
+  for (const line of text.split('\n')) {
+    if (/^\s*```/.test(line)) {
+      fenced = !fenced;
+    }
+    if (!fenced && /^---\s*$/.test(line)) {
+      parts.push([]);
+    } else {
+      parts[parts.length - 1].push(line);
+    }
+  }
+  return parts.map((lines) => lines.join('\n').trim()).filter(Boolean);
+}
+
+module.exports = { resolve, sections, themed, toRegExp };

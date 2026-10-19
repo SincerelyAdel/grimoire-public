@@ -7,9 +7,16 @@ const SV_LANGUAGES = ['systemverilog', 'systemverilogheader', 'verilog', 'verilo
 const SV_FOLDERS = ['sv', 'uvm'];
 const BUNDLED = path.join(__dirname, 'library');
 const WORD = /[`$]?[A-Za-z_][A-Za-z0-9_$]*/;
+// Hovers draw --- flush against its neighbours, so give it an empty line on each side.
+const SEPARATOR = '\n\n<br>\n\n---\n\n<br>\n\n';
 
 function config() {
   return vscode.workspace.getConfiguration('grimoire');
+}
+
+function theme() {
+  const kind = vscode.window.activeColorTheme.kind;
+  return kind === vscode.ColorThemeKind.Light || kind === vscode.ColorThemeKind.HighContrastLight ? 'light' : 'dark';
 }
 
 function folders(languageId) {
@@ -47,8 +54,9 @@ function provideHover(document, position) {
   } catch (err) {
     return undefined;
   }
-  const md = new vscode.MarkdownString(text);
-  md.baseUri = vscode.Uri.file(path.dirname(file) + path.sep);
+  const dir = path.dirname(file);
+  const md = new vscode.MarkdownString(lookup.sections(lookup.themed(text, dir, theme())).join(SEPARATOR));
+  md.baseUri = vscode.Uri.file(dir + path.sep);
   md.supportHtml = true;
   return new vscode.Hover(md, range);
 }

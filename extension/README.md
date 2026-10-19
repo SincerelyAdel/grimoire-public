@@ -45,7 +45,9 @@ A library folder holds subfolders, and each subfolder holds one folder per word,
 - Any other subfolder applies everywhere.
 - A page in your folders wins over a built-in page with the same name.
 - The first line of a page is its title, written as ``**`name`** — summary``.
+- A line of `---` draws a separator between parts of a page, such as the description, the code example and an animation, with space above and below it.
 - Pages can show images, GIFs and animated SVGs saved next to them in the word's folder. Refer to the file by name with a markdown image, or with an HTML `img` tag when you want to set its `width`.
+- To match light and dark themes, save two files with `.dark` and `.light` before the extension, and refer to the name without it. A page that shows `behavior.svg` gets `behavior.dark.svg` in dark and high contrast themes, and `behavior.light.svg` in light themes.
 
 A subfolder can also hold an `aliases.json` file that points other names at an existing page. Keys are names or `*` globs, values are page names, and the first match wins:
 

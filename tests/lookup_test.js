@@ -107,5 +107,25 @@ assert.strictEqual(lookup.resolve([legacy], 'flat'), path.join(legacy, 'flat.md'
 assert.strictEqual(lookup.resolve([legacy], 'both'), path.join(legacy, 'both', 'both.md'));
 fs.rmSync(legacy, { recursive: true });
 
+// Images switch to their .dark/.light file when the tag folder has one.
+const ff = path.join(library, 'sv', 'always_ff');
+const page = [
+  '<img src="behavior.svg" width="300">',
+  '![x](behavior.svg)',
+  '![y](missing.gif)',
+  '![z](https://a.b/c.svg)',
+].join('\n');
+assert.strictEqual(lookup.themed(page, ff, 'dark'), [
+  '<img src="behavior.dark.svg" width="300">',
+  '![x](behavior.dark.svg)',
+  '![y](missing.gif)',
+  '![z](https://a.b/c.svg)',
+].join('\n'));
+assert.ok(lookup.themed(page, ff, 'light').startsWith('<img src="behavior.light.svg"'));
+
+// A page splits into hover sections at --- lines, but not inside code.
+assert.deepStrictEqual(lookup.sections('a\n\n---\n\n```\nx\n---\n```\n---\nb\n'), ['a', '```\nx\n---\n```', 'b']);
+assert.deepStrictEqual(lookup.sections('only\n'), ['only']);
+
 console.log(`${cases.length - failed}/${cases.length} lookups passed`);
 process.exit(failed ? 1 : 0);

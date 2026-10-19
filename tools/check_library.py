@@ -8,6 +8,51 @@ LIBRARY = ROOT / "extension" / "library"
 TITLE = re.compile(r"^\*\*`.+`\*\* — \S")
 REFERENCE = re.compile(r"`([A-Za-z_][\w$]*)`")
 IMAGE = re.compile(r"""!\[[^\]]*\]\(([^)\s]+)|<img[^>]*\ssrc=["']([^"']+)["']""")
+WHOLE_IMAGE = re.compile(r"!\[[^\]]*\]\([^)]*\)|<img[^>]*>")
+THEMES = ("dark", "light")
+
+
+def sections(text):
+    """Split a page at its --- lines outside code fences, as the hover does."""
+    parts, fenced = [[]], False
+    for line in text.splitlines():
+        if line.lstrip().startswith("```"):
+            fenced = not fenced
+        if not fenced and re.fullmatch(r"---\s*", line):
+            parts.append([])
+        else:
+            parts[-1].append(line)
+    return ["\n".join(lines).strip() for lines in parts]
+
+
+def check_layout(text):
+    """A page with a visual is: description --- **Coding example** + code --- **Visual** + images."""
+    parts = sections(text)
+    if len(parts) != 3:
+        return "a page with a visual needs description --- Coding example --- Visual"
+    description, example, visual = parts
+    if IMAGE.search(description) or IMAGE.search(example):
+        return "images belong only in the Visual section"
+    if not example.startswith("**Coding example**\n\n```"):
+        return "second section must be **Coding example** followed by a code block"
+    if not visual.startswith("**Visual**\n\n") or WHOLE_IMAGE.sub("", visual[len("**Visual**"):]).strip():
+        return "third section must be **Visual** followed only by images"
+    return None
+
+
+def check_image(tag, src):
+    """An image is either the file itself or a <name>.dark/.light pair next to the page."""
+    if src != src.lower():
+        return f"image {src} is not lowercase"
+    stem, dot, ext = src.rpartition(".")
+    variants = [tag / f"{stem}.{theme}.{ext}" for theme in THEMES] if dot else []
+    found = [v for v in variants if v.is_file()]
+    if found and len(found) < len(variants):
+        missing = next(v.name for v in variants if not v.is_file())
+        return f"image {src} has no {missing}"
+    if not found and not (tag / src).is_file():
+        return f"image {src} not found"
+    return None
 
 
 def check_folder(folder):
@@ -41,14 +86,17 @@ def check_folder(folder):
             problems.append(f"{page.name}: unbalanced code fence")
         if not text.endswith("\n"):
             problems.append(f"{page.name}: no trailing newline")
+        if IMAGE.search(text):
+            problem = check_layout(text)
+            if problem:
+                problems.append(f"{page.name}: {problem}")
         for match in IMAGE.finditer(text):
             src = match.group(1) or match.group(2)
             if re.match(r"^[a-z]+:", src):
                 continue
-            if not (tag / src).is_file():
-                problems.append(f"{page.name}: image {src} not found")
-            elif src != src.lower():
-                problems.append(f"{page.name}: image {src} is not lowercase")
+            problem = check_image(tag, src)
+            if problem:
+                problems.append(f"{page.name}: {problem}")
         for line in lines:
             if not line.startswith("**See also**"):
                 continue
