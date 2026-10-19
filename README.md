@@ -7,17 +7,21 @@ A VS Code extension that explains SystemVerilog keywords and UVM names on hover.
 | Path | What it holds |
 | --- | --- |
 | `extension/` | The extension, with the built-in `sv` and `uvm` pages under `extension/library/` |
+| `extension/uvm-core/` | Accellera's UVM 2020.3.1, a git submodule bundled for slang |
 | `example/` | SystemVerilog and UVM files to try the hovers on |
-| `tests/` | Lookup tests |
+| `tests/` | Lookup and UVM setup tests |
 | `tools/` | Library checks and the hover animation generator |
 | `ANIMATIONS.md` | Which words get an animation, grouped into families that share one design |
 
 ## Build and test
 
+Clone with `git clone --recursive`, or run `git submodule update --init` in an existing clone, to fetch the bundled UVM.
+
 ```shell
 python3 tools/animate.py
 python3 tools/check_library.py
 node tests/lookup_test.js
+node tests/uvm_test.js
 cd extension
 npx @vscode/vsce package --no-dependencies -o ../adels-grimoire.vsix
 code --install-extension ../adels-grimoire.vsix

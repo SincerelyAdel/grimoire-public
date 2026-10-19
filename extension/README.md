@@ -2,16 +2,15 @@
 
 Explains SystemVerilog keywords and UVM names where you read them. Hover a word to see what it does, the rules that apply to it and a worked example, without leaving your code.
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/SincerelyAdel/grimoire-public/main/extension/media/hover-1-dark.gif">
-  <img alt="Hovering always_ff shows its description, a coding example and an animation of the flip-flop" src="https://raw.githubusercontent.com/SincerelyAdel/grimoire-public/main/extension/media/hover-1-light.gif">
-</picture>
+![Hovering always_ff shows its description, a coding example and an animation of the flip-flop](https://raw.githubusercontent.com/SincerelyAdel/grimoire-public/main/extension/media/hover-1.gif)
 
 ## Features
 
 ### Keyword help on hover
 
 Hover any of the 248 SystemVerilog keywords, such as `always_ff`, `begin`, `constraint` or `throughout`, to see what it does, the rules that apply to it and a short example. Closing keywords lead to the keyword they close: `end` opens `begin`, `endmodule` opens `module`.
+
+![Hovering end shows the page for begin, the keyword it closes](https://raw.githubusercontent.com/SincerelyAdel/grimoire-public/main/extension/media/hover-2.gif)
 
 ### UVM help on hover
 
@@ -20,6 +19,8 @@ Hover a UVM class, macro, method, phase or constant, such as `uvm_config_db`, ``
 Variations lead to the right page: `` `uvm_do_with `` opens the `` `uvm_do `` page, `uvm_analysis_imp_wr` opens `` `uvm_analysis_imp_decl ``, and `pre_reset_phase` opens `reset_phase`.
 
 UVM pages only appear in SystemVerilog files.
+
+![Hovering uvm_config_db shows its signature, a worked example and the usual pitfalls](https://raw.githubusercontent.com/SincerelyAdel/grimoire-public/main/extension/media/hover-3.gif)
 
 ### Animated hovers
 
@@ -34,6 +35,20 @@ For 105 words, the hover ends with a short looping animation that acts out its c
 
 Animations match your color theme, with separate versions for light and dark themes.
 
+![Hovering unique case, assert, fork and get_next_item in turn, each with its animation](https://raw.githubusercontent.com/SincerelyAdel/grimoire-public/main/extension/media/hover-4.gif)
+
+### UVM ready for slang
+
+Slang needs to find a UVM library to complete UVM code and to check it without errors. When a workspace uses UVM and slang is not set up for it yet, Grimoire sets it up for you, using the first of:
+
+1. the folder chosen with **Grimoire: Set UVM Path**,
+2. the `UVM_HOME` environment variable,
+3. the UVM bundled with Grimoire ([Accellera UVM 2020.3.1](https://github.com/accellera-official/uvm-core), Apache 2.0).
+
+It adds the UVM location to the workspace's `.slang/local/server.json`, which is slang's file for settings that belong to one machine, alongside a `.gitignore` that keeps it out of your repository, and restarts slang. Workspaces that do not use UVM, or that already point slang at a UVM library, are left alone.
+
+Grimoire's page also stays above slang's own hover when both have something to show.
+
 ### Your own pages
 
 Add a folder of Markdown pages, such as your team's coding rules or notes on in-house IP, and they appear on hover next to the built-in ones.
@@ -45,10 +60,20 @@ Add a folder of Markdown pages, such as your team's coding rules or notes on in-
 
 The SystemVerilog and UVM pages are built in, so hover help works straight away.
 
+## Commands
+
+| Command | What it does |
+| --- | --- |
+| **Grimoire: Set UVM Path** | Choose the UVM library slang uses, or go back to automatic: `UVM_HOME`, else the bundled UVM. Shows which one is in use. |
+| **Grimoire: Disable** | Turn off Grimoire's hovers and its slang setup. |
+| **Grimoire: Enable** | Turn them back on. |
+
 ## Settings
 
 | Setting | Default | What it does |
 | --- | --- | --- |
+| `grimoire.enabled` | `true` | Show Grimoire's hovers and keep slang pointed at a UVM library. |
+| `grimoire.uvmPath` | `""` | UVM library for slang, as the UVM folder or its `src` folder. Empty uses `UVM_HOME`, else the bundled UVM. |
 | `grimoire.libraryPaths` | `[]` | Extra documentation folders, searched before the built-in pages. |
 
 ## Adding your own pages
