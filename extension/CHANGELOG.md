@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.3
+
+- Hover pages can show images, GIFs and animated SVGs, with separate files for light and dark themes.
+- A `---` line splits a page into spaced sections.
+- Each page now lives in its own folder, next to its images; flat `<name>.md` pages in your own libraries still work.
+- `always_ff` shows an animation of its behaviour.
+
 ## 1.0.2
 
 - Adel's Grimoire is now purely a documentation extension: violation-report squiggles were removed, along with the `grimoire.reportGlob` setting and the reload command.
