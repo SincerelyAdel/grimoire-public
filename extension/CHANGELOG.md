@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.4
+
+- 105 words now end their hover with an animation of their coding example: registers, gates, processes, `fork`/`join`, branching, assertions, and the UVM phases, objections, sequence-driver handshake, analysis ports, FIFOs and agents.
+- `posedge`, `negedge` and `edge` draw a waveform that lights the edges they react to.
+- Each wire in an animation flashes when its signal changes.
+- The Repository and Issues links are back.
+
 ## 1.0.3
 
 - Hover pages can show images, GIFs and animated SVGs, with separate files for light and dark themes.
