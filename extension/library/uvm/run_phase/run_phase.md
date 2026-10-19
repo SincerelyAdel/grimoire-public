@@ -12,7 +12,22 @@ virtual task run_phase(uvm_phase phase);
 
 The phase lasts as long as at least one objection is raised. When the last objection is dropped (and any drain time has passed), the phase ends and every `run_phase` task still running is killed, including `forever` loops. If nothing ever raises an objection, the phase ends at time 0 and no stimulus runs.
 
-**Example**
+**Guidelines**
+
+- Raise the objection before the first time-consuming statement. If time advances first, the phase may already have ended.
+- Keep objections in the test, or in a top-level sequence. Raising one per transaction in a driver or monitor is slow.
+- Add a drain time when the DUT needs a few cycles to flush results after the last stimulus.
+- A scoreboard that must finish processing can delay the end with `phase_ready_to_end`.
+
+**Relation to the run-time phases**
+
+`reset_phase`, `configure_phase`, `main_phase`, `shutdown_phase` and their `pre_`/`post_` forms run at the same time as `run_phase`. `run_phase` does not end until those have all finished, and they do not wait for it unless it holds an objection. Using one style consistently avoids surprises.
+
+**See also**: `raise_objection`, `drop_objection`, `set_drain_time`, `uvm_phase`, `main_phase`, `phase_ready_to_end`, `extract_phase`
+
+---
+
+**Coding example**
 
 ```systemverilog
 // Test: owns the objection
@@ -51,15 +66,8 @@ task run_phase(uvm_phase phase);
 endtask
 ```
 
-**Guidelines**
+---
 
-- Raise the objection before the first time-consuming statement. If time advances first, the phase may already have ended.
-- Keep objections in the test, or in a top-level sequence. Raising one per transaction in a driver or monitor is slow.
-- Add a drain time when the DUT needs a few cycles to flush results after the last stimulus.
-- A scoreboard that must finish processing can delay the end with `phase_ready_to_end`.
+**Visual**
 
-**Relation to the run-time phases**
-
-`reset_phase`, `configure_phase`, `main_phase`, `shutdown_phase` and their `pre_`/`post_` forms run at the same time as `run_phase`. `run_phase` does not end until those have all finished, and they do not wait for it unless it holds an objection. Using one style consistently avoids surprises.
-
-**See also**: `raise_objection`, `drop_objection`, `set_drain_time`, `uvm_phase`, `main_phase`, `phase_ready_to_end`, `extract_phase`
+<img src="behavior.svg" width="300">

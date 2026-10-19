@@ -9,7 +9,17 @@ The first half of `` `uvm_do ``. It constructs the object with the factory and a
 `uvm_create_on(SEQ_OR_ITEM, SEQR)
 ```
 
-**Example**
+**Notes**
+
+- Use this split form when you need to set fields by hand, disable a constraint, or change `rand_mode` before sending.
+- `` `uvm_create_on `` sets a different sequencer, for use from a virtual sequence.
+- The equivalent explicit code is `req = fifo_transaction::type_id::create("req");` followed by `start_item(req)` / `finish_item(req)`.
+
+**See also**: `uvm_do`, `uvm_send`, `uvm_rand_send`, `start_item`, `finish_item`
+
+---
+
+**Coding example**
 
 ```systemverilog
 task body();
@@ -24,10 +34,8 @@ task body();
 endtask
 ```
 
-**Notes**
+---
 
-- Use this split form when you need to set fields by hand, disable a constraint, or change `rand_mode` before sending.
-- `` `uvm_create_on `` sets a different sequencer, for use from a virtual sequence.
-- The equivalent explicit code is `req = fifo_transaction::type_id::create("req");` followed by `start_item(req)` / `finish_item(req)`.
+**Visual**
 
-**See also**: `uvm_do`, `uvm_send`, `uvm_rand_send`, `start_item`, `finish_item`
+<img src="behavior.svg" width="300">

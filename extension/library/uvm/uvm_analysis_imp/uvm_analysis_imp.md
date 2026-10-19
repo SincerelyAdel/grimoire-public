@@ -17,7 +17,30 @@ class uvm_analysis_imp #(type T = int, type IMP = int)
 | `T` | Transaction type. |
 | `IMP` | Type of the component that implements `write`. |
 
-**Example**
+**More than one input**
+
+A class can only have one `write`. For several inputs, declare suffixed imp types:
+
+```systemverilog
+`uvm_analysis_imp_decl(_wr)
+`uvm_analysis_imp_decl(_rd)
+
+uvm_analysis_imp_wr #(fifo_transaction, fifo_scoreboard) wr_ap;   // calls write_wr
+uvm_analysis_imp_rd #(fifo_transaction, fifo_scoreboard) rd_ap;   // calls write_rd
+```
+
+**Notes**
+
+- The second constructor argument is the implementing component, normally `this`. It serves as the parent too.
+- `write` must be a function with exactly one argument of type `T`. A task, or a different argument type, fails to compile inside the imp class, with an error that points into the UVM source.
+- Do not modify the received transaction; clone it first, as other subscribers hold the same handle.
+- `uvm_subscriber` packages an imp and a pure virtual `write` for the single-input case.
+
+**See also**: `uvm_analysis_imp_decl`, `uvm_analysis_port`, `uvm_analysis_export`, `uvm_subscriber`, `uvm_scoreboard`, `uvm_tlm_analysis_fifo`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_predictor extends uvm_component;
@@ -44,23 +67,8 @@ endclass
 wr_agt.ap.connect(pred.wr_imp);
 ```
 
-**More than one input**
+---
 
-A class can only have one `write`. For several inputs, declare suffixed imp types:
+**Visual**
 
-```systemverilog
-`uvm_analysis_imp_decl(_wr)
-`uvm_analysis_imp_decl(_rd)
-
-uvm_analysis_imp_wr #(fifo_transaction, fifo_scoreboard) wr_ap;   // calls write_wr
-uvm_analysis_imp_rd #(fifo_transaction, fifo_scoreboard) rd_ap;   // calls write_rd
-```
-
-**Notes**
-
-- The second constructor argument is the implementing component, normally `this`. It serves as the parent too.
-- `write` must be a function with exactly one argument of type `T`. A task, or a different argument type, fails to compile inside the imp class, with an error that points into the UVM source.
-- Do not modify the received transaction; clone it first, as other subscribers hold the same handle.
-- `uvm_subscriber` packages an imp and a pure virtual `write` for the single-input case.
-
-**See also**: `uvm_analysis_imp_decl`, `uvm_analysis_port`, `uvm_analysis_export`, `uvm_subscriber`, `uvm_scoreboard`, `uvm_tlm_analysis_fifo`
+<img src="behavior.svg" width="300">

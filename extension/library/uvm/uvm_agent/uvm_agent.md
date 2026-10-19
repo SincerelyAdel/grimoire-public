@@ -13,7 +13,24 @@ virtual class uvm_agent extends uvm_component;
 
 `uvm_agent::build_phase` reads `is_active` from the configuration database, so `super.build_phase(phase)` must be called first.
 
-**Example**
+Make it passive from the test:
+
+```systemverilog
+uvm_config_db #(uvm_bitstream_t)::set(this, "env.wr_agt", "is_active", UVM_PASSIVE);
+```
+
+**Guidelines**
+
+- The monitor is always built and must not depend on the driver, so the agent stays useful when passive.
+- Expose one analysis port on the agent that forwards the monitor's port, so the environment never reaches inside.
+- Starting a sequence on a passive agent's sequencer is a null-handle error; guard it with `get_is_active()`.
+- The type used in the database matters. UVM 1.1d reads `is_active` with `get_config_int`, which only matches `uvm_config_db #(uvm_bitstream_t)` (or the legacy `set_config_int`); a value set as `#(uvm_active_passive_enum)` or `#(int)` is silently ignored. UVM 1.2 also accepts the enum, `int` and string forms. `uvm_bitstream_t` works in both.
+
+**See also**: `is_active`, `get_is_active`, `UVM_ACTIVE`, `UVM_PASSIVE`, `uvm_driver`, `uvm_monitor`, `uvm_sequencer`, `uvm_env`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_wr_agent extends uvm_agent;
@@ -46,17 +63,8 @@ class fifo_wr_agent extends uvm_agent;
 endclass
 ```
 
-Make it passive from the test:
+---
 
-```systemverilog
-uvm_config_db #(uvm_bitstream_t)::set(this, "env.wr_agt", "is_active", UVM_PASSIVE);
-```
+**Visual**
 
-**Guidelines**
-
-- The monitor is always built and must not depend on the driver, so the agent stays useful when passive.
-- Expose one analysis port on the agent that forwards the monitor's port, so the environment never reaches inside.
-- Starting a sequence on a passive agent's sequencer is a null-handle error; guard it with `get_is_active()`.
-- The type used in the database matters. UVM 1.1d reads `is_active` with `get_config_int`, which only matches `uvm_config_db #(uvm_bitstream_t)` (or the legacy `set_config_int`); a value set as `#(uvm_active_passive_enum)` or `#(int)` is silently ignored. UVM 1.2 also accepts the enum, `int` and string forms. `uvm_bitstream_t` works in both.
-
-**See also**: `is_active`, `get_is_active`, `UVM_ACTIVE`, `UVM_PASSIVE`, `uvm_driver`, `uvm_monitor`, `uvm_sequencer`, `uvm_env`
+<img src="behavior.svg" width="300">

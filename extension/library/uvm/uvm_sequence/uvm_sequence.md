@@ -28,7 +28,22 @@ virtual class uvm_sequence #(type REQ = uvm_sequence_item,
 | `pre_start`, `pre_body`, `post_body`, `post_start` | Hooks around `body()` |
 | `starting_phase` (1.1) / `get_starting_phase()` (1.2) | The phase, when started as a default sequence |
 
-**Example**
+**Order of calls made by `start()`**
+
+`pre_start()` → `pre_body()` (only if `call_pre_post`) → `body()` → `post_body()` (only if `call_pre_post`) → `post_start()`.
+
+**Notes**
+
+- `start()` blocks until `body()` returns. Use `fork` to run sequences in parallel.
+- A sequence that is started by another sequence is a child; pass `this` as the parent so priorities, locks and names propagate.
+- Raise objections in the test, not in the sequence, unless the sequence is the test's default sequence.
+- A virtual sequence has no item type and only starts other sequences on other sequencers.
+
+**See also**: `uvm_sequence_item`, `uvm_sequencer`, `uvm_driver`, `body`, `start_item`, `finish_item`, `uvm_do`, `uvm_sequence_base`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_wr_seq extends uvm_sequence #(fifo_transaction);
@@ -60,15 +75,8 @@ seq.start(env.wr_agt.sqr);
 phase.drop_objection(this);
 ```
 
-**Order of calls made by `start()`**
+---
 
-`pre_start()` → `pre_body()` (only if `call_pre_post`) → `body()` → `post_body()` (only if `call_pre_post`) → `post_start()`.
+**Visual**
 
-**Notes**
-
-- `start()` blocks until `body()` returns. Use `fork` to run sequences in parallel.
-- A sequence that is started by another sequence is a child; pass `this` as the parent so priorities, locks and names propagate.
-- Raise objections in the test, not in the sequence, unless the sequence is the test's default sequence.
-- A virtual sequence has no item type and only starts other sequences on other sequencers.
-
-**See also**: `uvm_sequence_item`, `uvm_sequencer`, `uvm_driver`, `body`, `start_item`, `finish_item`, `uvm_do`, `uvm_sequence_base`
+<img src="behavior.svg" width="300">

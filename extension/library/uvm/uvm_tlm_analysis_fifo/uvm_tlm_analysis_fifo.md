@@ -24,7 +24,17 @@ The FIFO is always unbounded, so `write` never fails.
 | `is_empty()` | 1 if nothing is stored |
 | `flush()` | Discard everything |
 
-**Example**
+**Notes**
+
+- Connect the publisher to the FIFO's `analysis_export` member, not to the FIFO itself.
+- A `forever` loop blocked in `get()` is killed when the run phase ends; check for leftovers in `check_phase`.
+- Compared with `` `uvm_analysis_imp_decl ``, a FIFO costs one object per stream but lets the checker consume time and impose its own ordering.
+
+**See also**: `uvm_tlm_fifo`, `uvm_analysis_port`, `uvm_analysis_imp`, `uvm_analysis_imp_decl`, `uvm_scoreboard`, `analysis_export`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_scoreboard extends uvm_scoreboard;
@@ -63,10 +73,8 @@ wr_agt.ap.connect(scb.wr_fifo.analysis_export);
 rd_agt.ap.connect(scb.rd_fifo.analysis_export);
 ```
 
-**Notes**
+---
 
-- Connect the publisher to the FIFO's `analysis_export` member, not to the FIFO itself.
-- A `forever` loop blocked in `get()` is killed when the run phase ends; check for leftovers in `check_phase`.
-- Compared with `` `uvm_analysis_imp_decl ``, a FIFO costs one object per stream but lets the checker consume time and impose its own ordering.
+**Visual**
 
-**See also**: `uvm_tlm_fifo`, `uvm_analysis_port`, `uvm_analysis_imp`, `uvm_analysis_imp_decl`, `uvm_scoreboard`, `analysis_export`
+<img src="behavior.svg" width="300">

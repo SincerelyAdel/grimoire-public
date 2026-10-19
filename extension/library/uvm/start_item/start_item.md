@@ -16,20 +16,6 @@ virtual task start_item(uvm_sequence_item item,
 | `set_priority` | Priority for this item; `-1` uses the sequence's own priority |
 | `sequencer` | Sequencer to send on; `null` uses the one the sequence is running on |
 
-**Example**
-
-```systemverilog
-task body();
-    repeat (n_items) begin
-        req = fifo_transaction::type_id::create("req");
-        start_item(req);                               // wait for grant
-        if (!req.randomize() with { delay < 3; })      // late randomization
-            `uvm_error("FIFO_WR_SEQ", "randomize failed")
-        finish_item(req);                              // send, wait for item_done
-    end
-endtask
-```
-
 **What it does internally**
 
 1. Sets the item's parent sequence and sequencer.
@@ -47,3 +33,25 @@ The grant can come much later than the request, for example while another sequen
 - Create a new item for each iteration, or clone it, if anything downstream keeps the handle.
 
 **See also**: `finish_item`, `uvm_sequence`, `get_next_item`, `item_done`, `uvm_do`, `wait_for_grant`, `pre_do`
+
+---
+
+**Coding example**
+
+```systemverilog
+task body();
+    repeat (n_items) begin
+        req = fifo_transaction::type_id::create("req");
+        start_item(req);                               // wait for grant
+        if (!req.randomize() with { delay < 3; })      // late randomization
+            `uvm_error("FIFO_WR_SEQ", "randomize failed")
+        finish_item(req);                              // send, wait for item_done
+    end
+endtask
+```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

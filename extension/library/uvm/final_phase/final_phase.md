@@ -14,7 +14,17 @@ virtual function void final_phase(uvm_phase phase);
 - Flush or close connections to external models and tools.
 - Print anything that must come after every component's report.
 
-**Example**
+**Notes**
+
+- After this phase the library prints the report summary and, unless `uvm_top.finish_on_completion` is 0, calls `$finish`.
+- It does not run if the simulation ends early through `UVM_EXIT`. For cleanup that must happen even then, override `pre_abort()` on the component.
+- A SystemVerilog `final` block is the language-level equivalent for module code.
+
+**See also**: `report_phase`, `check_phase`, `extract_phase`, `uvm_root`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_scoreboard extends uvm_scoreboard;
@@ -36,10 +46,8 @@ class fifo_scoreboard extends uvm_scoreboard;
 endclass
 ```
 
-**Notes**
+---
 
-- After this phase the library prints the report summary and, unless `uvm_top.finish_on_completion` is 0, calls `$finish`.
-- It does not run if the simulation ends early through `UVM_EXIT`. For cleanup that must happen even then, override `pre_abort()` on the component.
-- A SystemVerilog `final` block is the language-level equivalent for module code.
+**Visual**
 
-**See also**: `report_phase`, `check_phase`, `extract_phase`, `uvm_root`
+<img src="behavior.svg" width="300">

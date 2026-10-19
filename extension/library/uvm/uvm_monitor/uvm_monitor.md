@@ -11,7 +11,19 @@ virtual class uvm_monitor extends uvm_component;
 
 It adds nothing to `uvm_component`; the analysis port is yours to declare.
 
-**Example**
+**Guidelines**
+
+- Create a new transaction object for each observation. Reusing one object corrupts every subscriber that kept the handle.
+- Sample through a clocking block with input skew so the monitor sees stable values.
+- Report only what was observed on the pins. Do not peek at the driver or the sequence.
+- Put protocol checks and interface coverage here or in the interface itself, so they work in passive mode too.
+- `ap.write()` is a function and returns immediately; subscribers must not block.
+
+**See also**: `uvm_analysis_port`, `uvm_driver`, `uvm_agent`, `uvm_scoreboard`, `uvm_subscriber`, `run_phase`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_wr_monitor extends uvm_monitor;
@@ -47,12 +59,8 @@ class fifo_wr_monitor extends uvm_monitor;
 endclass
 ```
 
-**Guidelines**
+---
 
-- Create a new transaction object for each observation. Reusing one object corrupts every subscriber that kept the handle.
-- Sample through a clocking block with input skew so the monitor sees stable values.
-- Report only what was observed on the pins. Do not peek at the driver or the sequence.
-- Put protocol checks and interface coverage here or in the interface itself, so they work in passive mode too.
-- `ap.write()` is a function and returns immediately; subscribers must not block.
+**Visual**
 
-**See also**: `uvm_analysis_port`, `uvm_driver`, `uvm_agent`, `uvm_scoreboard`, `uvm_subscriber`, `run_phase`
+<img src="behavior.svg" width="300">

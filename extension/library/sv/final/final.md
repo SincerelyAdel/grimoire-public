@@ -2,6 +2,16 @@
 
 Runs when simulation finishes, for example after `$finish`. It executes in zero time, so it cannot contain delays or event controls. Used for summaries and end-of-test checks.
 
+---
+
+**Coding example**
+
 ```systemverilog
 final $display("errors: %0d", error_count);
 ```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

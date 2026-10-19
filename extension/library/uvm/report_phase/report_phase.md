@@ -8,7 +8,19 @@ Runs after `check_phase`. It is a function, takes zero time, and executes bottom
 virtual function void report_phase(uvm_phase phase);
 ```
 
-**Example**
+**Notes**
+
+- Because the phase is bottom-up, the test's `report_phase` runs last, after every component has reported, so its verdict includes errors raised in the components' `check_phase` and `report_phase`.
+- Print the verdict at `UVM_NONE` so it is never filtered out, and use a fixed string that regression scripts can search for.
+- Do not put checks here; put them in `check_phase` so that all errors exist before any summary is printed.
+- The library prints its own "UVM Report Summary" with the per-severity and per-ID counts after `final_phase`.
+- If the run ends through a fatal or the quit count, this phase does not execute; scripts should treat a missing verdict line as a failure.
+
+**See also**: `check_phase`, `final_phase`, `uvm_report_server`, `uvm_info`, `UVM_NONE`
+
+---
+
+**Coding example**
 
 ```systemverilog
 // Scoreboard: its own statistics
@@ -31,12 +43,8 @@ function void report_phase(uvm_phase phase);
 endfunction
 ```
 
-**Notes**
+---
 
-- Because the phase is bottom-up, the test's `report_phase` runs last, after every component has reported, so its verdict includes errors raised in the components' `check_phase` and `report_phase`.
-- Print the verdict at `UVM_NONE` so it is never filtered out, and use a fixed string that regression scripts can search for.
-- Do not put checks here; put them in `check_phase` so that all errors exist before any summary is printed.
-- The library prints its own "UVM Report Summary" with the per-severity and per-ID counts after `final_phase`.
-- If the run ends through a fatal or the quit count, this phase does not execute; scripts should treat a missing verdict line as a failure.
+**Visual**
 
-**See also**: `check_phase`, `final_phase`, `uvm_report_server`, `uvm_info`, `UVM_NONE`
+<img src="behavior.svg" width="300">

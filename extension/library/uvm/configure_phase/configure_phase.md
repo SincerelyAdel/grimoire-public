@@ -16,7 +16,16 @@ virtual task post_configure_phase(uvm_phase phase);
 | `configure_phase` | Program registers and memories |
 | `post_configure_phase` | Wait for the configuration to take effect: PLL lock, calibration, enable bits |
 
-**Example**
+**Notes**
+
+- Raise an objection for the duration of the programming, or the phase ends immediately and `main_phase` starts while registers are still being written.
+- When a test jumps back to `reset_phase`, this phase runs again, which re-applies the configuration automatically. That is the main benefit of using it over a block of code at the start of `run_phase`.
+
+**See also**: `reset_phase`, `main_phase`, `shutdown_phase`, `uvm_reg_block`, `uvm_reg_sequence`, `uvm_phase`
+
+---
+
+**Coding example**
 
 ```systemverilog
 task configure_phase(uvm_phase phase);
@@ -37,9 +46,8 @@ task configure_phase(uvm_phase phase);
 endtask
 ```
 
-**Notes**
+---
 
-- Raise an objection for the duration of the programming, or the phase ends immediately and `main_phase` starts while registers are still being written.
-- When a test jumps back to `reset_phase`, this phase runs again, which re-applies the configuration automatically. That is the main benefit of using it over a block of code at the start of `run_phase`.
+**Visual**
 
-**See also**: `reset_phase`, `main_phase`, `shutdown_phase`, `uvm_reg_block`, `uvm_reg_sequence`, `uvm_phase`
+<img src="behavior.svg" width="300">

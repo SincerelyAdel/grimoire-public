@@ -15,7 +15,16 @@ virtual function void start_of_simulation_phase(uvm_phase phase);
 - Install report catchers and callbacks.
 - Set initial values in models and memories.
 
-**Example**
+**Notes**
+
+- It cannot consume time. Anything that waits for a clock or reset belongs in `run_phase` or `reset_phase`.
+- The difference from `end_of_elaboration_phase` is one of intent: that phase finishes and checks the structure; this one prepares for execution.
+
+**See also**: `end_of_elaboration_phase`, `run_phase`, `uvm_report_catcher`, `uvm_action`
+
+---
+
+**Coding example**
 
 ```systemverilog
 function void start_of_simulation_phase(uvm_phase phase);
@@ -34,9 +43,8 @@ function void start_of_simulation_phase(uvm_phase phase);
 endfunction
 ```
 
-**Notes**
+---
 
-- It cannot consume time. Anything that waits for a clock or reset belongs in `run_phase` or `reset_phase`.
-- The difference from `end_of_elaboration_phase` is one of intent: that phase finishes and checks the structure; this one prepares for execution.
+**Visual**
 
-**See also**: `end_of_elaboration_phase`, `run_phase`, `uvm_report_catcher`, `uvm_action`
+<img src="behavior.svg" width="300">

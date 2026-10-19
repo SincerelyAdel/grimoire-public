@@ -15,7 +15,17 @@ virtual function void end_of_elaboration_phase(uvm_phase phase);
 - Check that the configuration is consistent.
 - Check connection counts on ports.
 
-**Example**
+**Notes**
+
+- Do not create components or make connections here; both are too late and are reported as errors.
+- Connection errors detected by the library ("connection count of 0 does not meet required minimum of 1") appear just before this phase.
+- Setting `uvm_top.enable_print_topology = 1` prints the topology automatically at this point.
+
+**See also**: `connect_phase`, `start_of_simulation_phase`, `print_topology`, `uvm_factory`, `set_report_verbosity_level`
+
+---
+
+**Coding example**
 
 ```systemverilog
 function void end_of_elaboration_phase(uvm_phase phase);
@@ -36,10 +46,8 @@ function void end_of_elaboration_phase(uvm_phase phase);
 endfunction
 ```
 
-**Notes**
+---
 
-- Do not create components or make connections here; both are too late and are reported as errors.
-- Connection errors detected by the library ("connection count of 0 does not meet required minimum of 1") appear just before this phase.
-- Setting `uvm_top.enable_print_topology = 1` prints the topology automatically at this point.
+**Visual**
 
-**See also**: `connect_phase`, `start_of_simulation_phase`, `print_topology`, `uvm_factory`, `set_report_verbosity_level`
+<img src="behavior.svg" width="300">

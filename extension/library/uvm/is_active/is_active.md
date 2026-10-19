@@ -8,7 +8,26 @@ A member of `uvm_agent`, of type `uvm_active_passive_enum`. It decides what the 
 uvm_active_passive_enum is_active = UVM_ACTIVE;
 ```
 
-**Example**
+**Setting it: the type must match the UVM version**
+
+| UVM version | Types the agent accepts for `"is_active"` |
+| --- | --- |
+| 1.1d | `uvm_bitstream_t` only (what `set_config_int` stores) |
+| 1.2 and later | `uvm_active_passive_enum`, `uvm_bitstream_t`, `int`, `int unsigned`, `uvm_integral_t`, `string` |
+
+`uvm_config_db #(uvm_bitstream_t)` works everywhere. In 1.1d, a value set as `#(uvm_active_passive_enum)` is silently ignored and the agent stays active.
+
+**Notes**
+
+- The value is only read if the agent calls `super.build_phase(phase)` before testing it.
+- It can also be assigned directly by the parent right after `create()`, but only before the agent's own `build_phase` runs, and the configuration database is the conventional route.
+- `get_is_active()` returns the same value and is the form to use from outside the agent.
+
+**See also**: `get_is_active`, `uvm_agent`, `UVM_ACTIVE`, `UVM_PASSIVE`, `uvm_active_passive_enum`, `uvm_config_db`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_wr_agent extends uvm_agent;
@@ -35,19 +54,8 @@ endclass
 uvm_config_db #(uvm_bitstream_t)::set(this, "env.wr_agt", "is_active", UVM_PASSIVE);
 ```
 
-**Setting it: the type must match the UVM version**
+---
 
-| UVM version | Types the agent accepts for `"is_active"` |
-| --- | --- |
-| 1.1d | `uvm_bitstream_t` only (what `set_config_int` stores) |
-| 1.2 and later | `uvm_active_passive_enum`, `uvm_bitstream_t`, `int`, `int unsigned`, `uvm_integral_t`, `string` |
+**Visual**
 
-`uvm_config_db #(uvm_bitstream_t)` works everywhere. In 1.1d, a value set as `#(uvm_active_passive_enum)` is silently ignored and the agent stays active.
-
-**Notes**
-
-- The value is only read if the agent calls `super.build_phase(phase)` before testing it.
-- It can also be assigned directly by the parent right after `create()`, but only before the agent's own `build_phase` runs, and the configuration database is the conventional route.
-- `get_is_active()` returns the same value and is the form to use from outside the agent.
-
-**See also**: `get_is_active`, `uvm_agent`, `UVM_ACTIVE`, `UVM_PASSIVE`, `uvm_active_passive_enum`, `uvm_config_db`
+<img src="behavior.svg" width="300">

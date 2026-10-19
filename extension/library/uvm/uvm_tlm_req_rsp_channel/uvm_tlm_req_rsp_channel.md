@@ -20,7 +20,11 @@ class uvm_tlm_req_rsp_channel #(type REQ = int, type RSP = REQ) extends uvm_comp
 | `get_peek_request_export`, `put_response_export` | Target | The same, separately |
 | `request_ap`, `response_ap` | Observers | Analysis ports that publish every request and response |
 
-**Example**
+**See also**: `uvm_tlm_fifo`, `uvm_blocking_put_port`, `uvm_analysis_port`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_initiator extends uvm_component;
@@ -52,4 +56,8 @@ target.port.connect(channel.slave_export);
 channel.request_ap.connect(cov.analysis_export);
 ```
 
-**See also**: `uvm_tlm_fifo`, `uvm_blocking_put_port`, `uvm_analysis_port`
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

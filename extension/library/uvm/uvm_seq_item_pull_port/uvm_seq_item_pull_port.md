@@ -23,7 +23,16 @@ class uvm_seq_item_pull_port #(type REQ = int, type RSP = REQ)
 | `has_do_available()` | function | 1 if a sequence has an item ready |
 | `wait_for_sequences()` | task | Wait a few delta cycles for sequences to produce an item |
 
-**Example**
+**Notes**
+
+- Each `get_next_item` must be followed by exactly one `item_done` before the next `get_next_item`. Violating this is reported as an error ("get_next_item called twice without item_done or get in between").
+- The port accepts exactly one connection: one driver, one sequencer.
+
+**See also**: `seq_item_port`, `seq_item_export`, `get_next_item`, `try_next_item`, `item_done`, `uvm_driver`, `uvm_sequencer`
+
+---
+
+**Coding example**
 
 ```systemverilog
 // Agent
@@ -59,9 +68,8 @@ forever begin
 end
 ```
 
-**Notes**
+---
 
-- Each `get_next_item` must be followed by exactly one `item_done` before the next `get_next_item`. Violating this is reported as an error ("get_next_item called twice without item_done or get in between").
-- The port accepts exactly one connection: one driver, one sequencer.
+**Visual**
 
-**See also**: `seq_item_port`, `seq_item_export`, `get_next_item`, `try_next_item`, `item_done`, `uvm_driver`, `uvm_sequencer`
+<img src="behavior.svg" width="300">

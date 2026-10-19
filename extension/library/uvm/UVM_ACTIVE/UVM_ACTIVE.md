@@ -2,7 +2,16 @@
 
 A value of `uvm_active_passive_enum` (numerically 1) and the default for `uvm_agent::is_active`. An active agent creates its sequencer and driver in addition to its monitor, and connects the driver to the sequencer.
 
-**Example**
+**Notes**
+
+- Guard every use of `sqr` and `drv` with the same test, including in virtual sequencers and in the test that starts sequences; they are null when the agent is passive.
+- `get_is_active()` is the accessor form of the same check and can be overridden by an agent.
+
+**See also**: `UVM_PASSIVE`, `uvm_active_passive_enum`, `uvm_agent`, `is_active`, `get_is_active`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_wr_agent extends uvm_agent;
@@ -29,9 +38,8 @@ class fifo_wr_agent extends uvm_agent;
 endclass
 ```
 
-**Notes**
+---
 
-- Guard every use of `sqr` and `drv` with the same test, including in virtual sequencers and in the test that starts sequences; they are null when the agent is passive.
-- `get_is_active()` is the accessor form of the same check and can be overridden by an agent.
+**Visual**
 
-**See also**: `UVM_PASSIVE`, `uvm_active_passive_enum`, `uvm_agent`, `is_active`, `get_is_active`
+<img src="behavior.svg" width="300">

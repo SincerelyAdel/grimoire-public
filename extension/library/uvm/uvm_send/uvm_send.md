@@ -9,7 +9,17 @@ The second half of `` `uvm_do ``. It takes an object that already exists, normal
 `uvm_send_pri(SEQ_OR_ITEM, PRIORITY)
 ```
 
-**Example**
+**Notes**
+
+- Nothing is randomized. Every field keeps the value you assigned, which makes this the macro for fully directed stimulus.
+- Use `` `uvm_rand_send `` if you want randomization to happen after the sequencer grant.
+- `` `uvm_send_pri `` passes a priority used by the sequencer's arbitration.
+
+**See also**: `uvm_create`, `uvm_rand_send`, `uvm_do`, `start_item`, `finish_item`
+
+---
+
+**Coding example**
 
 ```systemverilog
 task body();
@@ -20,10 +30,8 @@ task body();
 endtask
 ```
 
-**Notes**
+---
 
-- Nothing is randomized. Every field keeps the value you assigned, which makes this the macro for fully directed stimulus.
-- Use `` `uvm_rand_send `` if you want randomization to happen after the sequencer grant.
-- `` `uvm_send_pri `` passes a priority used by the sequencer's arbitration.
+**Visual**
 
-**See also**: `uvm_create`, `uvm_rand_send`, `uvm_do`, `start_item`, `finish_item`
+<img src="behavior.svg" width="300">

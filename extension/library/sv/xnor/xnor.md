@@ -2,6 +2,16 @@
 
 A gate-level primitive. The first terminal is the output and the rest are inputs, with any number of inputs. Found mostly in netlists; in RTL write the operator instead. An optional drive strength and delay can follow the keyword.
 
+---
+
+**Coding example**
+
 ```systemverilog
 xnor u_xnor (eq, a, b);   // eq = ~(a ^ b)
 ```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

@@ -11,7 +11,18 @@ virtual class uvm_subscriber #(type T = int) extends uvm_component;
     pure virtual function void write(T t);
 ```
 
-**Example**
+**Notes**
+
+- It handles exactly one stream. For two or more, use `` `uvm_analysis_imp_decl `` or analysis FIFOs in a `uvm_scoreboard` instead.
+- The member is named `analysis_export`, even though its type is an imp.
+- A covergroup embedded in a class must be constructed in the class constructor.
+- `write()` must not block and must not modify the transaction; other subscribers receive the same object.
+
+**See also**: `uvm_analysis_port`, `uvm_analysis_imp`, `analysis_export`, `uvm_scoreboard`, `uvm_monitor`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_coverage extends uvm_subscriber #(fifo_transaction);
@@ -40,11 +51,8 @@ endclass
 wr_agt.ap.connect(cov.analysis_export);
 ```
 
-**Notes**
+---
 
-- It handles exactly one stream. For two or more, use `` `uvm_analysis_imp_decl `` or analysis FIFOs in a `uvm_scoreboard` instead.
-- The member is named `analysis_export`, even though its type is an imp.
-- A covergroup embedded in a class must be constructed in the class constructor.
-- `write()` must not block and must not modify the transaction; other subscribers receive the same object.
+**Visual**
 
-**See also**: `uvm_analysis_port`, `uvm_analysis_imp`, `analysis_export`, `uvm_scoreboard`, `uvm_monitor`
+<img src="behavior.svg" width="300">

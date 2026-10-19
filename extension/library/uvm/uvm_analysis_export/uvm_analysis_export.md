@@ -9,7 +9,24 @@ class uvm_analysis_export #(type T = int) extends uvm_port_base #(uvm_tlm_if_bas
     function new(string name, uvm_component parent = null);
 ```
 
-**Example**
+**Port, export, imp**
+
+| Kind | Role |
+| --- | --- |
+| `uvm_analysis_port` | Initiator: calls `write` |
+| `uvm_analysis_export` | Pass-through on the receiving side of a boundary |
+| `uvm_analysis_imp` | Terminator: implements `write` |
+
+**Notes**
+
+- A `uvm_tlm_analysis_fifo` exposes an `analysis_export` member, and `uvm_subscriber` has one too, so "connect to the export" is the usual way to feed either.
+- An export must eventually lead to an imp; an unconnected export fails the connection check at end of elaboration.
+
+**See also**: `uvm_analysis_port`, `uvm_analysis_imp`, `analysis_export`, `uvm_tlm_analysis_fifo`, `uvm_subscriber`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_checker extends uvm_env;
@@ -40,17 +57,8 @@ endclass
 wr_agt.ap.connect(chk.wr_export);                  // port -> export
 ```
 
-**Port, export, imp**
+---
 
-| Kind | Role |
-| --- | --- |
-| `uvm_analysis_port` | Initiator: calls `write` |
-| `uvm_analysis_export` | Pass-through on the receiving side of a boundary |
-| `uvm_analysis_imp` | Terminator: implements `write` |
+**Visual**
 
-**Notes**
-
-- A `uvm_tlm_analysis_fifo` exposes an `analysis_export` member, and `uvm_subscriber` has one too, so "connect to the export" is the usual way to feed either.
-- An export must eventually lead to an imp; an unconnected export fails the connection check at end of elaboration.
-
-**See also**: `uvm_analysis_port`, `uvm_analysis_imp`, `analysis_export`, `uvm_tlm_analysis_fifo`, `uvm_subscriber`
+<img src="behavior.svg" width="300">

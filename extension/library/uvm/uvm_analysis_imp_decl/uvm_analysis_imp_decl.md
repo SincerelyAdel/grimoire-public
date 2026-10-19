@@ -14,7 +14,18 @@ A component can only have one function called `write()`, so with the plain `uvm_
 
 It must be used at package or compilation-unit scope, outside any class.
 
-**Example**
+**Notes**
+
+- The generated class takes the same two parameters as `uvm_analysis_imp`: the transaction type and the type of the component that implements `write<SFX>`.
+- A missing `write<SFX>` method is a compile error pointing into the macro expansion.
+- Each `write<SFX>` is a function and must not block. If the checker needs to wait, use a `uvm_tlm_analysis_fifo` per stream and a task in `run_phase` instead.
+- The other TLM interfaces have the same kind of macro: `` `uvm_blocking_put_imp_decl ``, `` `uvm_nonblocking_get_imp_decl ``, `` `uvm_put_imp_decl ``, `` `uvm_get_peek_imp_decl `` and so on.
+
+**See also**: `uvm_analysis_imp`, `uvm_analysis_port`, `uvm_tlm_analysis_fifo`, `uvm_scoreboard`, `uvm_subscriber`
+
+---
+
+**Coding example**
 
 ```systemverilog
 `uvm_analysis_imp_decl(_wr)
@@ -50,11 +61,8 @@ wr_agt.ap.connect(scb.wr_ap);
 rd_agt.ap.connect(scb.rd_ap);
 ```
 
-**Notes**
+---
 
-- The generated class takes the same two parameters as `uvm_analysis_imp`: the transaction type and the type of the component that implements `write<SFX>`.
-- A missing `write<SFX>` method is a compile error pointing into the macro expansion.
-- Each `write<SFX>` is a function and must not block. If the checker needs to wait, use a `uvm_tlm_analysis_fifo` per stream and a task in `run_phase` instead.
-- The other TLM interfaces have the same kind of macro: `` `uvm_blocking_put_imp_decl ``, `` `uvm_nonblocking_get_imp_decl ``, `` `uvm_put_imp_decl ``, `` `uvm_get_peek_imp_decl `` and so on.
+**Visual**
 
-**See also**: `uvm_analysis_imp`, `uvm_analysis_port`, `uvm_tlm_analysis_fifo`, `uvm_scoreboard`, `uvm_subscriber`
+<img src="behavior.svg" width="300">

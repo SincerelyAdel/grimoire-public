@@ -15,7 +15,17 @@ virtual function void check_phase(uvm_phase phase);
 - Counters balance: items written equals items read plus items still stored.
 - Expected error scenarios really occurred, in negative tests.
 
-**Example**
+**Notes**
+
+- A scoreboard that only checks during the run reports a passing result for a test in which the DUT simply stopped responding. The end-of-test checks close that hole.
+- Errors raised here still count toward the final result, because `report_phase` runs afterwards.
+- This phase is skipped if the simulation ends early through a fatal error or the quit count.
+
+**See also**: `extract_phase`, `report_phase`, `uvm_scoreboard`, `uvm_error`, `phase_ready_to_end`
+
+---
+
+**Coding example**
 
 ```systemverilog
 function void check_phase(uvm_phase phase);
@@ -32,10 +42,8 @@ function void check_phase(uvm_phase phase);
 endfunction
 ```
 
-**Notes**
+---
 
-- A scoreboard that only checks during the run reports a passing result for a test in which the DUT simply stopped responding. The end-of-test checks close that hole.
-- Errors raised here still count toward the final result, because `report_phase` runs afterwards.
-- This phase is skipped if the simulation ends early through a fatal error or the quit count.
+**Visual**
 
-**See also**: `extract_phase`, `report_phase`, `uvm_scoreboard`, `uvm_error`, `phase_ready_to_end`
+<img src="behavior.svg" width="300">

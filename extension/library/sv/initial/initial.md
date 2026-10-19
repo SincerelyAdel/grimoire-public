@@ -2,9 +2,19 @@
 
 Starts at the beginning of simulation and runs once. Used for testbench stimulus and memory initialisation. Generally not synthesizable for ASIC, though FPGA tools accept it for initial register and RAM values.
 
+---
+
+**Coding example**
+
 ```systemverilog
 initial begin
   rst_n = 0;
   #20 rst_n = 1;
 end
 ```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

@@ -2,6 +2,10 @@
 
 `disable name;` ends the named block or task, including any processes it started, and continues after it. `disable fork;` kills all child processes of the current process. In assertions, `disable iff (expr)` stops evaluating the property while the expression is true.
 
+---
+
+**Coding example**
+
 ```systemverilog
 fork : timeout_guard
   begin wait (done); end
@@ -9,3 +13,9 @@ fork : timeout_guard
 join_any
 disable timeout_guard;
 ```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

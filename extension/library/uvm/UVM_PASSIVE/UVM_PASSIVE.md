@@ -2,7 +2,17 @@
 
 A value of `uvm_active_passive_enum` (numerically 0). A passive agent creates only its monitor. It drives nothing, so it can be attached to an interface that real RTL is driving, and its monitor still feeds scoreboards, coverage and protocol checks.
 
-**Example**
+**Notes**
+
+- In passive mode the agent's `sqr` and `drv` handles are null. Starting a sequence on a null sequencer is a fatal error.
+- Everything needed for checking must live in the monitor, never in the driver, or it disappears in passive mode.
+- The interface signals must not be driven from the testbench side in passive mode; make sure the virtual interface modport or the top-level wiring reflects that.
+
+**See also**: `UVM_ACTIVE`, `uvm_active_passive_enum`, `uvm_agent`, `is_active`, `get_is_active`, `uvm_monitor`
+
+---
+
+**Coding example**
 
 ```systemverilog
 // Chip-level test: the FIFO's write side is now driven by an upstream block
@@ -20,10 +30,8 @@ task run_phase(uvm_phase phase);
 endtask
 ```
 
-**Notes**
+---
 
-- In passive mode the agent's `sqr` and `drv` handles are null. Starting a sequence on a null sequencer is a fatal error.
-- Everything needed for checking must live in the monitor, never in the driver, or it disappears in passive mode.
-- The interface signals must not be driven from the testbench side in passive mode; make sure the virtual interface modport or the top-level wiring reflects that.
+**Visual**
 
-**See also**: `UVM_ACTIVE`, `uvm_active_passive_enum`, `uvm_agent`, `is_active`, `get_is_active`, `uvm_monitor`
+<img src="behavior.svg" width="300">

@@ -14,20 +14,6 @@ virtual function void drop_objection(uvm_object obj = null, string description =
 
 The `obj` passed must be the same object that raised the objection.
 
-**Example**
-
-```systemverilog
-task run_phase(uvm_phase phase);
-    phase.raise_objection(this, "stimulus");
-    fork
-        wr_seq.start(env.wr_agt.sqr);
-        rd_seq.start(env.rd_agt.sqr);
-    join
-    phase.phase_done.set_drain_time(this, 20);     // let the DUT flush
-    phase.drop_objection(this, "stimulus");
-endtask
-```
-
 **What happens after the last drop**
 
 1. The drain time set for the object, if any, elapses.
@@ -45,3 +31,25 @@ endtask
 | Last transaction is cut off | The drop came before the DUT finished; add a drain time or use `phase_ready_to_end` |
 
 **See also**: `raise_objection`, `set_drain_time`, `uvm_objection`, `phase_ready_to_end`, `run_phase`, `UVM_TIMEOUT`, `UVM_OBJECTION_TRACE`
+
+---
+
+**Coding example**
+
+```systemverilog
+task run_phase(uvm_phase phase);
+    phase.raise_objection(this, "stimulus");
+    fork
+        wr_seq.start(env.wr_agt.sqr);
+        rd_seq.start(env.rd_agt.sqr);
+    join
+    phase.phase_done.set_drain_time(this, 20);     // let the DUT flush
+    phase.drop_objection(this, "stimulus");
+endtask
+```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

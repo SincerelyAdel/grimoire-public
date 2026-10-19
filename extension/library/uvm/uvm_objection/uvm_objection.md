@@ -27,7 +27,18 @@ class uvm_objection extends uvm_report_object;
 
 `raised()`, `dropped()` and `all_dropped()` are virtual methods on `uvm_component` and `uvm_objection` that are called as counts propagate up the hierarchy.
 
-**Example**
+**Notes**
+
+- Add `+UVM_OBJECTION_TRACE` to the command line to log every raise and drop.
+- Raising and dropping is relatively expensive. Do it once around a whole sequence, not once per transaction.
+- A drop without a matching raise is an error: "Object ... attempted to drop objection count below zero".
+- If nothing ever raises an objection in a task phase, the phase ends at time 0.
+
+**See also**: `raise_objection`, `drop_objection`, `set_drain_time`, `phase_done`, `uvm_phase`, `uvm_test_done`, `UVM_OBJECTION_TRACE`
+
+---
+
+**Coding example**
 
 ```systemverilog
 task run_phase(uvm_phase phase);
@@ -46,11 +57,8 @@ function void phase_ready_to_end(uvm_phase phase);
 endfunction
 ```
 
-**Notes**
+---
 
-- Add `+UVM_OBJECTION_TRACE` to the command line to log every raise and drop.
-- Raising and dropping is relatively expensive. Do it once around a whole sequence, not once per transaction.
-- A drop without a matching raise is an error: "Object ... attempted to drop objection count below zero".
-- If nothing ever raises an objection in a task phase, the phase ends at time 0.
+**Visual**
 
-**See also**: `raise_objection`, `drop_objection`, `set_drain_time`, `phase_done`, `uvm_phase`, `uvm_test_done`, `UVM_OBJECTION_TRACE`
+<img src="behavior.svg" width="300">

@@ -12,7 +12,18 @@ virtual function void item_done(input RSP rsp_arg = null);
 | --- | --- |
 | `rsp_arg` | Optional response object. If given, it is put in the sequencer's response queue for the sequence to collect with `get_response()`. |
 
-**Example**
+**Rules**
+
+- It is a function and takes no time.
+- Call it exactly once per item. Calling it with no item outstanding is an error.
+- A response must have `set_id_info(req)` applied, so the sequencer knows which sequence it belongs to.
+- If responses are sent, every sequence must consume them with `get_response()`, or the response queue overflows after 8 by default.
+
+**See also**: `get_next_item`, `try_next_item`, `finish_item`, `get_response`, `set_id_info`, `seq_item_port`, `rsp_port`
+
+---
+
+**Coding example**
 
 ```systemverilog
 // Without a response
@@ -35,11 +46,8 @@ rsp.legal = !vif.wr_drv_cb.full;
 seq_item_port.item_done(rsp);
 ```
 
-**Rules**
+---
 
-- It is a function and takes no time.
-- Call it exactly once per item. Calling it with no item outstanding is an error.
-- A response must have `set_id_info(req)` applied, so the sequencer knows which sequence it belongs to.
-- If responses are sent, every sequence must consume them with `get_response()`, or the response queue overflows after 8 by default.
+**Visual**
 
-**See also**: `get_next_item`, `try_next_item`, `finish_item`, `get_response`, `set_id_info`, `seq_item_port`, `rsp_port`
+<img src="behavior.svg" width="300">

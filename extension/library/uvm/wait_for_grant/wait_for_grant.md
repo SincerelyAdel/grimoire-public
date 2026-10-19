@@ -31,7 +31,17 @@ wait_for_item_done();
 post_do(req);
 ```
 
-**Example**
+**Notes**
+
+- No simulation time may pass between `wait_for_grant` returning and `send_request`. The sequencer is held for that whole time, and the driver is left waiting.
+- These calls skip the `pre_do`, `mid_do` and `post_do` hooks unless you invoke them yourself.
+- Prefer `start_item` / `finish_item`. The low-level form exists mainly for backward compatibility and for unusual handshakes.
+
+**See also**: `start_item`, `finish_item`, `item_done`, `pre_do`, `uvm_sequence_base`, `uvm_sequencer`
+
+---
+
+**Coding example**
 
 ```systemverilog
 task body();
@@ -45,10 +55,8 @@ task body();
 endtask
 ```
 
-**Notes**
+---
 
-- No simulation time may pass between `wait_for_grant` returning and `send_request`. The sequencer is held for that whole time, and the driver is left waiting.
-- These calls skip the `pre_do`, `mid_do` and `post_do` hooks unless you invoke them yourself.
-- Prefer `start_item` / `finish_item`. The low-level form exists mainly for backward compatibility and for unusual handshakes.
+**Visual**
 
-**See also**: `start_item`, `finish_item`, `item_done`, `pre_do`, `uvm_sequence_base`, `uvm_sequencer`
+<img src="behavior.svg" width="300">

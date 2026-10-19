@@ -9,7 +9,17 @@ The conventional name of the member that receives analysis transactions. `uvm_su
 | `uvm_subscriber #(T)` | `uvm_analysis_imp #(T, this_type) analysis_export;` calls your `write()` |
 | `uvm_tlm_analysis_fifo #(T)` | `uvm_analysis_imp #(T, uvm_tlm_analysis_fifo #(T)) analysis_export;` stores into the FIFO |
 
-**Example**
+**Notes**
+
+- In both library classes the member is an imp, even though it is called an export. The name describes its role at the component boundary.
+- The publisher is always the caller: `port.connect(x.analysis_export)`.
+- A common mistake is connecting to the FIFO or subscriber object itself (`ap.connect(scb.wr_fifo)`), which does not compile.
+
+**See also**: `uvm_analysis_export`, `uvm_analysis_imp`, `uvm_analysis_port`, `uvm_subscriber`, `uvm_tlm_analysis_fifo`
+
+---
+
+**Coding example**
 
 ```systemverilog
 function void connect_phase(uvm_phase phase);
@@ -20,10 +30,8 @@ function void connect_phase(uvm_phase phase);
 endfunction
 ```
 
-**Notes**
+---
 
-- In both library classes the member is an imp, even though it is called an export. The name describes its role at the component boundary.
-- The publisher is always the caller: `port.connect(x.analysis_export)`.
-- A common mistake is connecting to the FIFO or subscriber object itself (`ap.connect(scb.wr_fifo)`), which does not compile.
+**Visual**
 
-**See also**: `uvm_analysis_export`, `uvm_analysis_imp`, `uvm_analysis_port`, `uvm_subscriber`, `uvm_tlm_analysis_fifo`
+<img src="behavior.svg" width="300">

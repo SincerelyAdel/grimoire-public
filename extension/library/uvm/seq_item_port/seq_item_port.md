@@ -8,26 +8,6 @@ A member of every `uvm_driver`, of type `uvm_seq_item_pull_port #(REQ, RSP)`. Th
 uvm_seq_item_pull_port #(REQ, RSP) seq_item_port;
 ```
 
-**Example**
-
-```systemverilog
-// Agent
-function void connect_phase(uvm_phase phase);
-    super.connect_phase(phase);
-    if (get_is_active() == UVM_ACTIVE)
-        drv.seq_item_port.connect(sqr.seq_item_export);
-endfunction
-
-// Driver
-task run_phase(uvm_phase phase);
-    forever begin
-        seq_item_port.get_next_item(req);    // blocks until a sequence sends an item
-        drive_item(req);
-        seq_item_port.item_done();           // releases finish_item() in the sequence
-    end
-endtask
-```
-
 **The handshake**
 
 | Sequence | Sequencer | Driver |
@@ -47,3 +27,31 @@ endtask
 - The connection goes port to export: `drv.seq_item_port.connect(sqr.seq_item_export)`, never the reverse.
 
 **See also**: `seq_item_export`, `uvm_seq_item_pull_port`, `get_next_item`, `item_done`, `uvm_driver`, `uvm_sequencer`, `rsp_port`
+
+---
+
+**Coding example**
+
+```systemverilog
+// Agent
+function void connect_phase(uvm_phase phase);
+    super.connect_phase(phase);
+    if (get_is_active() == UVM_ACTIVE)
+        drv.seq_item_port.connect(sqr.seq_item_export);
+endfunction
+
+// Driver
+task run_phase(uvm_phase phase);
+    forever begin
+        seq_item_port.get_next_item(req);    // blocks until a sequence sends an item
+        drive_item(req);
+        seq_item_port.item_done();           // releases finish_item() in the sequence
+    end
+endtask
+```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

@@ -27,19 +27,6 @@ All function phases other than `build` and `final` run bottom-up.
 | `jump(uvm_phase phase)` | Jump to another phase in the schedule, for example back to reset |
 | `get_run_count()` | How many times this phase has executed |
 
-**Example**
-
-```systemverilog
-task run_phase(uvm_phase phase);
-    fifo_wr_seq seq = fifo_wr_seq::type_id::create("seq");
-
-    phase.raise_objection(this, "running fifo_wr_seq");
-    seq.start(env.wr_agt.sqr);
-    phase.phase_done.set_drain_time(this, 20ns);
-    phase.drop_objection(this, "fifo_wr_seq done");
-endtask
-```
-
 **How a task phase ends**
 
 A task phase ends when its objection count reaches zero after having been raised at least once, or immediately at time 0 if nobody ever raises one. When it ends, every still-running phase task is killed, including `forever` loops in drivers and monitors.
@@ -52,3 +39,24 @@ A task phase ends when its objection count reaches zero after having been raised
 - Mixing `run_phase` and the run-time phases across components is legal but makes the end of test harder to reason about. Many teams use `run_phase` only in drivers and monitors, and either style consistently in tests.
 
 **See also**: `build_phase`, `run_phase`, `raise_objection`, `drop_objection`, `phase_done`, `uvm_objection`, `uvm_domain`, `uvm_phase_state`
+
+---
+
+**Coding example**
+
+```systemverilog
+task run_phase(uvm_phase phase);
+    fifo_wr_seq seq = fifo_wr_seq::type_id::create("seq");
+
+    phase.raise_objection(this, "running fifo_wr_seq");
+    seq.start(env.wr_agt.sqr);
+    phase.phase_done.set_drain_time(this, 20ns);
+    phase.drop_objection(this, "fifo_wr_seq done");
+endtask
+```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

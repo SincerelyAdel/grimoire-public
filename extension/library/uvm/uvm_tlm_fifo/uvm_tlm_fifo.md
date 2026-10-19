@@ -35,7 +35,17 @@ class uvm_tlm_fifo #(type T = int) extends uvm_tlm_fifo_base #(T);
 | `is_empty()` / `is_full()` | State |
 | `flush()` | Empty the FIFO |
 
-**Example**
+**Notes**
+
+- The default depth of 1 makes the producer wait for the consumer after each item. Pass 0 for an unbounded FIFO.
+- For data coming from a monitor, use `uvm_tlm_analysis_fifo`, which adds a `write` function and is always unbounded.
+- Sequencer-to-driver traffic uses the dedicated `seq_item_port` interface, not a TLM FIFO.
+
+**See also**: `uvm_tlm_analysis_fifo`, `uvm_blocking_put_port`, `uvm_tlm_req_rsp_channel`, `uvm_queue`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_stim_env extends uvm_env;
@@ -57,10 +67,8 @@ class fifo_stim_env extends uvm_env;
 endclass
 ```
 
-**Notes**
+---
 
-- The default depth of 1 makes the producer wait for the consumer after each item. Pass 0 for an unbounded FIFO.
-- For data coming from a monitor, use `uvm_tlm_analysis_fifo`, which adds a `write` function and is always unbounded.
-- Sequencer-to-driver traffic uses the dedicated `seq_item_port` interface, not a TLM FIFO.
+**Visual**
 
-**See also**: `uvm_tlm_analysis_fifo`, `uvm_blocking_put_port`, `uvm_tlm_req_rsp_channel`, `uvm_queue`
+<img src="behavior.svg" width="300">

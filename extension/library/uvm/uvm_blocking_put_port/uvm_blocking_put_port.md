@@ -27,7 +27,18 @@ function new(string name, uvm_component parent, int min_size = 1, int max_size =
 function new(string name, IMP imp);                                                    // imp
 ```
 
-**Example**
+**Connection rules**
+
+- Call `connect` on the initiator: `port.connect(export_or_imp)`.
+- Port to port goes up the hierarchy, export to export or imp goes down.
+- Every port must be connected to at least `min_size` targets by the end of elaboration, default 1. Only analysis ports default to 0.
+- Several imps of the same kind in one component need the `` `uvm_<interface>_imp_decl(SFX) `` macros to create distinctly named methods.
+
+**See also**: `uvm_tlm_fifo`, `uvm_analysis_port`, `uvm_analysis_imp_decl`, `uvm_port_base`, `uvm_seq_item_pull_port`, `uvm_tlm_req_rsp_channel`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_generator extends uvm_component;
@@ -68,11 +79,8 @@ endclass
 generator.out.connect(consumer.in);
 ```
 
-**Connection rules**
+---
 
-- Call `connect` on the initiator: `port.connect(export_or_imp)`.
-- Port to port goes up the hierarchy, export to export or imp goes down.
-- Every port must be connected to at least `min_size` targets by the end of elaboration, default 1. Only analysis ports default to 0.
-- Several imps of the same kind in one component need the `` `uvm_<interface>_imp_decl(SFX) `` macros to create distinctly named methods.
+**Visual**
 
-**See also**: `uvm_tlm_fifo`, `uvm_analysis_port`, `uvm_analysis_imp_decl`, `uvm_port_base`, `uvm_seq_item_pull_port`, `uvm_tlm_req_rsp_channel`
+<img src="behavior.svg" width="300">

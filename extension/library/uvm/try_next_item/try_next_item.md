@@ -10,7 +10,23 @@ virtual task try_next_item(output REQ t);
 
 It is a task because it may consume delta cycles while sequences get a chance to produce an item, but it never consumes simulation time.
 
-**Example**
+**Rules**
+
+- Call `item_done()` only when an item was actually returned. Calling it after a null result is an error ("Item_done() called with no outstanding requests").
+- A non-null result must be followed by `item_done()` before the next `try_next_item` or `get_next_item`.
+
+**When to use it**
+
+| Protocol behaviour | Call |
+| --- | --- |
+| The bus may simply stop when there is nothing to send | `get_next_item` |
+| The bus must show a defined idle or keep a clocked handshake running every cycle | `try_next_item` |
+
+**See also**: `get_next_item`, `item_done`, `seq_item_port`, `uvm_seq_item_pull_port`, `uvm_driver`
+
+---
+
+**Coding example**
 
 ```systemverilog
 task run_phase(uvm_phase phase);
@@ -28,16 +44,8 @@ task run_phase(uvm_phase phase);
 endtask
 ```
 
-**Rules**
+---
 
-- Call `item_done()` only when an item was actually returned. Calling it after a null result is an error ("Item_done() called with no outstanding requests").
-- A non-null result must be followed by `item_done()` before the next `try_next_item` or `get_next_item`.
+**Visual**
 
-**When to use it**
-
-| Protocol behaviour | Call |
-| --- | --- |
-| The bus may simply stop when there is nothing to send | `get_next_item` |
-| The bus must show a defined idle or keep a clocked handshake running every cycle | `try_next_item` |
-
-**See also**: `get_next_item`, `item_done`, `seq_item_port`, `uvm_seq_item_pull_port`, `uvm_driver`
+<img src="behavior.svg" width="300">

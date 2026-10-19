@@ -8,7 +8,17 @@ A member of every `uvm_driver`, of type `uvm_analysis_port #(RSP)`. It is an alt
 uvm_analysis_port #(RSP) rsp_port;
 ```
 
-**Example**
+**Notes**
+
+- `rsp.set_id_info(req)` copies the sequence ID and transaction ID; without it the sequencer cannot find the destination and reports "Dropping response ... sequence not found".
+- If the driver sends responses, every sequence must collect them with `get_response()` or use a response handler, or the response queue overflows (default depth 8).
+- Most drivers that return responses simply use `item_done(rsp)`; `rsp_port` is for pipelined protocols where the response comes later.
+
+**See also**: `seq_item_port`, `seq_item_export`, `get_response`, `set_id_info`, `item_done`, `uvm_driver`
+
+---
+
+**Coding example**
 
 ```systemverilog
 // Agent
@@ -31,10 +41,8 @@ finish_item(req);
 get_response(rsp);
 ```
 
-**Notes**
+---
 
-- `rsp.set_id_info(req)` copies the sequence ID and transaction ID; without it the sequencer cannot find the destination and reports "Dropping response ... sequence not found".
-- If the driver sends responses, every sequence must collect them with `get_response()` or use a response handler, or the response queue overflows (default depth 8).
-- Most drivers that return responses simply use `item_done(rsp)`; `rsp_port` is for pipelined protocols where the response comes later.
+**Visual**
 
-**See also**: `seq_item_port`, `seq_item_export`, `get_response`, `set_id_info`, `item_done`, `uvm_driver`
+<img src="behavior.svg" width="300">

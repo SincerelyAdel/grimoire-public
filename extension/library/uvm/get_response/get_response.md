@@ -13,23 +13,6 @@ virtual task get_response(output RSP response, input int transaction_id = -1);
 | `response` | Receives the response object |
 | `transaction_id` | `-1` returns the next response in order; a specific ID waits for the response to that request |
 
-**Example**
-
-```systemverilog
-task body();
-    repeat (n_items) begin
-        req = fifo_transaction::type_id::create("req");
-        start_item(req);
-        void'(req.randomize());
-        finish_item(req);
-
-        get_response(rsp);
-        if (!rsp.legal)
-            `uvm_info("FIFO_WR_SEQ", "write was rejected: FIFO full", UVM_MEDIUM)
-    end
-endtask
-```
-
 Out-of-order responses in a pipelined protocol:
 
 ```systemverilog
@@ -51,3 +34,28 @@ The driver must call `rsp.set_id_info(req)` before returning the response. That 
 - Many drivers avoid all of this by writing results back into the request object.
 
 **See also**: `item_done`, `rsp_port`, `set_id_info`, `finish_item`, `uvm_sequence`, `uvm_driver`
+
+---
+
+**Coding example**
+
+```systemverilog
+task body();
+    repeat (n_items) begin
+        req = fifo_transaction::type_id::create("req");
+        start_item(req);
+        void'(req.randomize());
+        finish_item(req);
+
+        get_response(rsp);
+        if (!rsp.legal)
+            `uvm_info("FIFO_WR_SEQ", "write was rejected: FIFO full", UVM_MEDIUM)
+    end
+endtask
+```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

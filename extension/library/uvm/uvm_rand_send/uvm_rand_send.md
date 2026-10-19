@@ -11,7 +11,16 @@ Like `` `uvm_send ``, but it randomizes the object first. Used after `` `uvm_cre
 `uvm_rand_send_pri_with(SEQ_OR_ITEM, PRIORITY, CONSTRAINTS)
 ```
 
-**Example**
+**Notes**
+
+- For an item, randomization happens after `start_item()` returns, so it sees the latest state.
+- A failed randomization produces a `RNDFLD` warning, not an error. Check your constraints if items look unrandomized.
+
+**See also**: `uvm_create`, `uvm_send`, `uvm_do`
+
+---
+
+**Coding example**
 
 ```systemverilog
 task body();
@@ -22,9 +31,8 @@ task body();
 endtask
 ```
 
-**Notes**
+---
 
-- For an item, randomization happens after `start_item()` returns, so it sees the latest state.
-- A failed randomization produces a `RNDFLD` warning, not an error. Check your constraints if items look unrandomized.
+**Visual**
 
-**See also**: `uvm_create`, `uvm_send`, `uvm_do`
+<img src="behavior.svg" width="300">

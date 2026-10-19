@@ -2,6 +2,10 @@
 
 Closes a `fork` and continues at once, leaving its processes running in the background. They start once the parent blocks or finishes. In a loop, copy the loop variable into an `automatic` variable first, or every process sees the last value.
 
+---
+
+**Coding example**
+
 ```systemverilog
 for (int i = 0; i < 4; i++) begin
   automatic int k = i;
@@ -11,3 +15,9 @@ for (int i = 0; i < 4; i++) begin
 end
 wait fork;
 ```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

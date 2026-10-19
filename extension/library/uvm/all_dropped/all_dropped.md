@@ -26,7 +26,18 @@ virtual task          all_dropped(uvm_objection objection, uvm_object source_obj
 | `description` | The text given to `raise_objection` / `drop_objection` |
 | `count` | How many were raised or dropped |
 
-**Example**
+**Notes**
+
+- `all_dropped` is a task: time spent in it delays the propagation of the drop to the parent, in the same way a drain time does.
+- The callbacks fire for every objection, in every phase. Always check which one it is.
+- For most end-of-test needs `phase_ready_to_end` is simpler and more direct.
+- A `uvm_objection_callback` object gives the same hooks without subclassing the component.
+
+**See also**: `raise_objection`, `drop_objection`, `uvm_objection`, `set_drain_time`, `phase_ready_to_end`, `phase_done`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_env extends uvm_env;
@@ -47,11 +58,8 @@ class fifo_env extends uvm_env;
 endclass
 ```
 
-**Notes**
+---
 
-- `all_dropped` is a task: time spent in it delays the propagation of the drop to the parent, in the same way a drain time does.
-- The callbacks fire for every objection, in every phase. Always check which one it is.
-- For most end-of-test needs `phase_ready_to_end` is simpler and more direct.
-- A `uvm_objection_callback` object gives the same hooks without subclassing the component.
+**Visual**
 
-**See also**: `raise_objection`, `drop_objection`, `uvm_objection`, `set_drain_time`, `phase_ready_to_end`, `phase_done`
+<img src="behavior.svg" width="300">

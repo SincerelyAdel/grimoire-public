@@ -22,7 +22,37 @@ class uvm_driver #(type REQ = uvm_sequence_item,
 | `rsp_port` | Analysis port for sending responses, an alternative to `item_done(rsp)`. |
 | `req`, `rsp` | Ready-made handles of the request and response types. |
 
-**Example**
+**The two handshake styles**
+
+| Style | Calls | Use when |
+| --- | --- | --- |
+| Blocking, one at a time | `get_next_item(req)` ... `item_done()` | The normal case |
+| Non-blocking | `try_next_item(req)`; drive idle if null | The bus must show idle cycles when no item is ready |
+| Pipelined | `get(req)` then later `put(rsp)` or `rsp_port.write(rsp)` | Several items are in flight at once |
+
+**Returning a response**
+
+```systemverilog
+seq_item_port.get_next_item(req);
+drive_item(req);
+$cast(rsp, req.clone());
+rsp.set_id_info(req);          // required so the sequencer can route it
+rsp.status = vif.wr_ack;
+seq_item_port.item_done(rsp);
+```
+
+**Notes**
+
+- Never raise objections in a driver's `forever` loop per item; it is slow. The test or sequence controls the end of the test.
+- Do not modify the `req` handle's stimulus fields; the sequence still holds the same object.
+- Drive through a clocking block to avoid races with the DUT.
+- Handle reset: a robust driver aborts the current item and returns the interface to idle when reset asserts.
+
+**See also**: `uvm_sequencer`, `uvm_sequence_item`, `seq_item_port`, `get_next_item`, `item_done`, `try_next_item`, `uvm_monitor`, `uvm_agent`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_wr_driver extends uvm_driver #(fifo_transaction);
@@ -61,30 +91,8 @@ class fifo_wr_driver extends uvm_driver #(fifo_transaction);
 endclass
 ```
 
-**The two handshake styles**
+---
 
-| Style | Calls | Use when |
-| --- | --- | --- |
-| Blocking, one at a time | `get_next_item(req)` ... `item_done()` | The normal case |
-| Non-blocking | `try_next_item(req)`; drive idle if null | The bus must show idle cycles when no item is ready |
-| Pipelined | `get(req)` then later `put(rsp)` or `rsp_port.write(rsp)` | Several items are in flight at once |
+**Visual**
 
-**Returning a response**
-
-```systemverilog
-seq_item_port.get_next_item(req);
-drive_item(req);
-$cast(rsp, req.clone());
-rsp.set_id_info(req);          // required so the sequencer can route it
-rsp.status = vif.wr_ack;
-seq_item_port.item_done(rsp);
-```
-
-**Notes**
-
-- Never raise objections in a driver's `forever` loop per item; it is slow. The test or sequence controls the end of the test.
-- Do not modify the `req` handle's stimulus fields; the sequence still holds the same object.
-- Drive through a clocking block to avoid races with the DUT.
-- Handle reset: a robust driver aborts the current item and returns the interface to idle when reset asserts.
-
-**See also**: `uvm_sequencer`, `uvm_sequence_item`, `seq_item_port`, `get_next_item`, `item_done`, `try_next_item`, `uvm_monitor`, `uvm_agent`
+<img src="behavior.svg" width="300">

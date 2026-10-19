@@ -15,7 +15,27 @@ A shortcut used inside a sequence's `body()`. For a sequence item it creates the
 | `` `uvm_do_on_pri(SEQ_OR_ITEM, SEQR, PRIORITY) `` | Sequencer and priority |
 | `` `uvm_do_on_pri_with(SEQ_OR_ITEM, SEQR, PRIORITY, CONSTRAINTS) `` | All three |
 
-**Example**
+**What `` `uvm_do(req) `` does for an item**
+
+```systemverilog
+req = fifo_transaction::type_id::create("req");
+start_item(req);
+if (!req.randomize()) `uvm_warning("RNDFLD", "Randomization failed in uvm_do action")
+finish_item(req);
+```
+
+**Notes**
+
+- The explicit `start_item` / `finish_item` form is easier to debug and lets you set fields between randomization and sending, so many coding guidelines prefer it.
+- The item is randomized late, after the sequencer grants access, so it can react to the current DUT state.
+- The macro variable must be declared; `req` already is, in every `uvm_sequence`.
+- These macros are removed from the IEEE 1800.2 standard, although libraries still ship them.
+
+**See also**: `uvm_create`, `uvm_send`, `start_item`, `finish_item`, `uvm_declare_p_sequencer`, `uvm_sequence`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_wr_seq extends uvm_sequence #(fifo_transaction);
@@ -43,20 +63,8 @@ class fifo_virtual_seq extends uvm_sequence;
 endclass
 ```
 
-**What `` `uvm_do(req) `` does for an item**
+---
 
-```systemverilog
-req = fifo_transaction::type_id::create("req");
-start_item(req);
-if (!req.randomize()) `uvm_warning("RNDFLD", "Randomization failed in uvm_do action")
-finish_item(req);
-```
+**Visual**
 
-**Notes**
-
-- The explicit `start_item` / `finish_item` form is easier to debug and lets you set fields between randomization and sending, so many coding guidelines prefer it.
-- The item is randomized late, after the sequencer grants access, so it can react to the current DUT state.
-- The macro variable must be declared; `req` already is, in every `uvm_sequence`.
-- These macros are removed from the IEEE 1800.2 standard, although libraries still ship them.
-
-**See also**: `uvm_create`, `uvm_send`, `start_item`, `finish_item`, `uvm_declare_p_sequencer`, `uvm_sequence`
+<img src="behavior.svg" width="300">

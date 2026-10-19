@@ -8,7 +8,23 @@ Runs after `build_phase`, when every component in the hierarchy exists. It is a 
 virtual function void connect_phase(uvm_phase phase);
 ```
 
-**Example**
+**Rules**
+
+- Call `connect` on the initiator and pass the target: `port.connect(export_or_imp)`.
+- Each level connects only its own children and its own ports. Do not reach several levels down; let each parent expose what its children offer.
+- The connections are only recorded here. They are resolved and checked after this phase, so a missing connection is reported at end of elaboration, not at the `connect` call.
+- Guard connections that involve optional components (`if (cfg.has_scoreboard)`, `if (get_is_active() == UVM_ACTIVE)`).
+
+**Notes**
+
+- Being bottom-up, a child's connections are made before its parent's. The order rarely matters, because resolution happens afterwards.
+- A null-handle error here almost always means the component was not created in `build_phase`, often because the agent is passive.
+
+**See also**: `build_phase`, `end_of_elaboration_phase`, `uvm_analysis_port`, `seq_item_port`, `seq_item_export`, `uvm_port_base`
+
+---
+
+**Coding example**
 
 ```systemverilog
 // Agent: driver to sequencer, and expose the monitor's analysis port
@@ -35,16 +51,8 @@ function void connect_phase(uvm_phase phase);
 endfunction
 ```
 
-**Rules**
+---
 
-- Call `connect` on the initiator and pass the target: `port.connect(export_or_imp)`.
-- Each level connects only its own children and its own ports. Do not reach several levels down; let each parent expose what its children offer.
-- The connections are only recorded here. They are resolved and checked after this phase, so a missing connection is reported at end of elaboration, not at the `connect` call.
-- Guard connections that involve optional components (`if (cfg.has_scoreboard)`, `if (get_is_active() == UVM_ACTIVE)`).
+**Visual**
 
-**Notes**
-
-- Being bottom-up, a child's connections are made before its parent's. The order rarely matters, because resolution happens afterwards.
-- A null-handle error here almost always means the component was not created in `build_phase`, often because the agent is passive.
-
-**See also**: `build_phase`, `end_of_elaboration_phase`, `uvm_analysis_port`, `seq_item_port`, `seq_item_export`, `uvm_port_base`
+<img src="behavior.svg" width="300">

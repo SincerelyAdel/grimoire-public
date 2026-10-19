@@ -13,21 +13,7 @@ class uvm_sequencer #(type REQ = uvm_sequence_item,
     function new(string name, uvm_component parent = null);
 ```
 
-**Usage**
-
-Most sequencers need no code at all. Either use a typedef or a minimal class:
-
-```systemverilog
-typedef uvm_sequencer #(fifo_transaction) fifo_sequencer;
-
-// or, when you want a named type to extend later:
-class fifo_sequencer extends uvm_sequencer #(fifo_transaction);
-    `uvm_component_utils(fifo_sequencer)
-    function new(string name = "fifo_sequencer", uvm_component parent = null);
-        super.new(name, parent);
-    endfunction
-endclass
-```
+Most sequencers need no code at all. Either use a typedef or a minimal class.
 
 Connect it in the agent and start sequences on it:
 
@@ -78,3 +64,25 @@ endclass
 - Explicitly starting sequences from the test is easier to follow than default sequences and is the more common style.
 
 **See also**: `uvm_sequence`, `uvm_driver`, `seq_item_export`, `m_sequencer`, `p_sequencer`, `set_arbitration`, `grab`
+
+---
+
+**Coding example**
+
+```systemverilog
+typedef uvm_sequencer #(fifo_transaction) fifo_sequencer;
+
+// or, when you want a named type to extend later:
+class fifo_sequencer extends uvm_sequencer #(fifo_transaction);
+    `uvm_component_utils(fifo_sequencer)
+    function new(string name = "fifo_sequencer", uvm_component parent = null);
+        super.new(name, parent);
+    endfunction
+endclass
+```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

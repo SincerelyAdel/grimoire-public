@@ -18,18 +18,6 @@ virtual function void raise_objection(uvm_object obj = null, string description 
 | `description` | Free text shown in objection traces; worth filling in |
 | `count` | How many objections to raise at once |
 
-**Example**
-
-```systemverilog
-task run_phase(uvm_phase phase);
-    fifo_wr_seq seq = fifo_wr_seq::type_id::create("seq");
-
-    phase.raise_objection(this, "fifo_wr_seq");
-    seq.start(env.wr_agt.sqr);
-    phase.drop_objection(this, "fifo_wr_seq");
-endtask
-```
-
 From a sequence started as a default sequence:
 
 ```systemverilog
@@ -55,3 +43,23 @@ endtask
 - Use `+UVM_OBJECTION_TRACE` to see who is objecting.
 
 **See also**: `drop_objection`, `set_drain_time`, `uvm_objection`, `uvm_phase`, `run_phase`, `phase_ready_to_end`, `starting_phase`, `UVM_OBJECTION_TRACE`
+
+---
+
+**Coding example**
+
+```systemverilog
+task run_phase(uvm_phase phase);
+    fifo_wr_seq seq = fifo_wr_seq::type_id::create("seq");
+
+    phase.raise_objection(this, "fifo_wr_seq");
+    seq.start(env.wr_agt.sqr);
+    phase.drop_objection(this, "fifo_wr_seq");
+endtask
+```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

@@ -10,7 +10,29 @@ class uvm_analysis_port #(type T = int) extends uvm_port_base #(uvm_tlm_if_base 
     function void write(input T t);
 ```
 
-**Example**
+**Connection rules**
+
+| From | To | Meaning |
+| --- | --- | --- |
+| port | port | Pass up through a parent (child's port to parent's port) |
+| port | export | Pass down into a child component |
+| port | imp | Final destination that implements `write` |
+| export | export or imp | Continue downward to the implementation |
+
+Always call `connect` on the initiator side: `publisher.connect(subscriber)`.
+
+**Notes**
+
+- `write` is a function. It takes no simulation time and subscribers must not block. A subscriber that needs to wait should receive through a `uvm_tlm_analysis_fifo`.
+- Every subscriber receives the same object handle. None of them may modify it; clone first if you need to.
+- An analysis port with no connection is legal, unlike other TLM ports, which require at least one.
+- Analysis ports are constructed with `new`, not through the factory, usually in the constructor or `build_phase`.
+
+**See also**: `uvm_analysis_imp`, `uvm_analysis_export`, `uvm_tlm_analysis_fifo`, `uvm_analysis_imp_decl`, `uvm_subscriber`, `uvm_monitor`, `connect_phase`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_wr_monitor extends uvm_monitor;
@@ -43,22 +65,8 @@ wr_agt.ap.connect(scb.wr_ap);
 wr_agt.ap.connect(cov.analysis_export);
 ```
 
-**Connection rules**
+---
 
-| From | To | Meaning |
-| --- | --- | --- |
-| port | port | Pass up through a parent (child's port to parent's port) |
-| port | export | Pass down into a child component |
-| port | imp | Final destination that implements `write` |
-| export | export or imp | Continue downward to the implementation |
+**Visual**
 
-Always call `connect` on the initiator side: `publisher.connect(subscriber)`.
-
-**Notes**
-
-- `write` is a function. It takes no simulation time and subscribers must not block. A subscriber that needs to wait should receive through a `uvm_tlm_analysis_fifo`.
-- Every subscriber receives the same object handle. None of them may modify it; clone first if you need to.
-- An analysis port with no connection is legal, unlike other TLM ports, which require at least one.
-- Analysis ports are constructed with `new`, not through the factory, usually in the constructor or `build_phase`.
-
-**See also**: `uvm_analysis_imp`, `uvm_analysis_export`, `uvm_tlm_analysis_fifo`, `uvm_analysis_imp_decl`, `uvm_subscriber`, `uvm_monitor`, `connect_phase`
+<img src="behavior.svg" width="300">

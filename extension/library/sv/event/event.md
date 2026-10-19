@@ -2,6 +2,10 @@
 
 A handle that processes can trigger with `->` and wait on with `@` or `wait (ev.triggered)`. `wait (ev.triggered)` also catches a trigger earlier in the same time step, avoiding a race with `@`. Events can be assigned and passed like handles.
 
+---
+
+**Coding example**
+
 ```systemverilog
 event done;
 initial begin
@@ -12,3 +16,9 @@ initial begin
   $display("done at %0t", $time);
 end
 ```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

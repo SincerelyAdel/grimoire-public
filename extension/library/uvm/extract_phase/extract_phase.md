@@ -8,7 +8,25 @@ The first of the four cleanup phases, entered once all time-consuming phases hav
 virtual function void extract_phase(uvm_phase phase);
 ```
 
-**Example**
+**The cleanup phases, in order**
+
+| Phase | Purpose |
+| --- | --- |
+| `extract_phase` | Collect: counters, queue sizes, final DUT state, coverage numbers |
+| `check_phase` | Judge: report errors for anything wrong |
+| `report_phase` | Print: summaries and the PASS/FAIL result |
+| `final_phase` | Close: files, external connections |
+
+**Notes**
+
+- No simulation time can pass. Anything that needs the clock must happen before the run phase ends.
+- Small testbenches often skip this phase and do the collecting directly in `check_phase`; the split matters when several components contribute to one check.
+
+**See also**: `check_phase`, `report_phase`, `final_phase`, `run_phase`, `uvm_scoreboard`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_scoreboard extends uvm_scoreboard;
@@ -32,18 +50,8 @@ class fifo_scoreboard extends uvm_scoreboard;
 endclass
 ```
 
-**The cleanup phases, in order**
+---
 
-| Phase | Purpose |
-| --- | --- |
-| `extract_phase` | Collect: counters, queue sizes, final DUT state, coverage numbers |
-| `check_phase` | Judge: report errors for anything wrong |
-| `report_phase` | Print: summaries and the PASS/FAIL result |
-| `final_phase` | Close: files, external connections |
+**Visual**
 
-**Notes**
-
-- No simulation time can pass. Anything that needs the clock must happen before the run phase ends.
-- Small testbenches often skip this phase and do the collecting directly in `check_phase`; the split matters when several components contribute to one check.
-
-**See also**: `check_phase`, `report_phase`, `final_phase`, `run_phase`, `uvm_scoreboard`
+<img src="behavior.svg" width="300">

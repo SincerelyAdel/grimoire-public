@@ -10,7 +10,17 @@ virtual task shutdown_phase     (uvm_phase phase);
 virtual task post_shutdown_phase(uvm_phase phase);
 ```
 
-**Example**
+**Notes**
+
+- Always bound a wait like the one above with a timeout, or a lost transaction hangs the test.
+- The alternative in a `run_phase`-only testbench is a drain time on the run objection, or `phase_ready_to_end` in the scoreboard.
+- After `post_shutdown_phase` and `run_phase` have both ended, the cleanup phases start with `extract_phase`.
+
+**See also**: `main_phase`, `reset_phase`, `configure_phase`, `run_phase`, `set_drain_time`, `phase_ready_to_end`, `extract_phase`
+
+---
+
+**Coding example**
 
 ```systemverilog
 // Test: read out whatever is left in the FIFO
@@ -36,10 +46,8 @@ task shutdown_phase(uvm_phase phase);
 endtask
 ```
 
-**Notes**
+---
 
-- Always bound a wait like the one above with a timeout, or a lost transaction hangs the test.
-- The alternative in a `run_phase`-only testbench is a drain time on the run objection, or `phase_ready_to_end` in the scoreboard.
-- After `post_shutdown_phase` and `run_phase` have both ended, the cleanup phases start with `extract_phase`.
+**Visual**
 
-**See also**: `main_phase`, `reset_phase`, `configure_phase`, `run_phase`, `set_drain_time`, `phase_ready_to_end`, `extract_phase`
+<img src="behavior.svg" width="300">

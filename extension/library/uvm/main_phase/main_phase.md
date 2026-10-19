@@ -10,7 +10,18 @@ virtual task main_phase     (uvm_phase phase);
 virtual task post_main_phase(uvm_phase phase);
 ```
 
-**Example: explicit sequence**
+**Notes**
+
+- The phase ends when all its objections are dropped. Without one it takes zero time and the stimulus never runs.
+- Drivers and monitors normally stay in `run_phase`; only the stimulus is split across the run-time phases.
+- If one component uses `main_phase` and another `run_phase` for stimulus, the end of the test depends on both sets of objections. Choose one style per testbench.
+- UVM 1.2 replaces the `starting_phase` variable with `get_starting_phase()` and adds `set_automatic_phase_objection(1)`, which raises and drops the objection for you.
+
+**See also**: `run_phase`, `reset_phase`, `configure_phase`, `shutdown_phase`, `raise_objection`, `starting_phase`, `uvm_sequencer`
+
+---
+
+**Coding example**
 
 ```systemverilog
 task main_phase(uvm_phase phase);
@@ -45,11 +56,8 @@ task body();
 endtask
 ```
 
-**Notes**
+---
 
-- The phase ends when all its objections are dropped. Without one it takes zero time and the stimulus never runs.
-- Drivers and monitors normally stay in `run_phase`; only the stimulus is split across the run-time phases.
-- If one component uses `main_phase` and another `run_phase` for stimulus, the end of the test depends on both sets of objections. Choose one style per testbench.
-- UVM 1.2 replaces the `starting_phase` variable with `get_starting_phase()` and adds `set_automatic_phase_objection(1)`, which raises and drops the objection for you.
+**Visual**
 
-**See also**: `run_phase`, `reset_phase`, `configure_phase`, `shutdown_phase`, `raise_objection`, `starting_phase`, `uvm_sequencer`
+<img src="behavior.svg" width="300">

@@ -9,7 +9,27 @@ uvm_objection phase_done;
 function uvm_objection get_objection();     // returns phase_done
 ```
 
-**Example**
+**Useful methods on it**
+
+| Method | Purpose |
+| --- | --- |
+| `set_drain_time(obj, drain)` | Delay the end of the phase |
+| `get_objection_total(obj = null)` | Outstanding objections at and below `obj` |
+| `get_objection_count(obj = null)` | Outstanding objections raised by `obj` itself |
+| `get_objectors(ref list[$])` | The objects currently objecting |
+| `display_objections(obj = null, show_header = 1)` | Print the objection tree |
+| `trace_mode(1)` | Log every raise and drop for this phase |
+
+**Notes**
+
+- In UVM 1.2 the variable is no longer part of the documented interface; use `phase.get_objection()`, which exists in the Cadence 1.1d library as well.
+- It is null for function phases, which have no objection.
+
+**See also**: `set_drain_time`, `uvm_objection`, `raise_objection`, `drop_objection`, `uvm_phase`
+
+---
+
+**Coding example**
 
 ```systemverilog
 task run_phase(uvm_phase phase);
@@ -32,20 +52,8 @@ function void phase_ready_to_end(uvm_phase phase);
 endfunction
 ```
 
-**Useful methods on it**
+---
 
-| Method | Purpose |
-| --- | --- |
-| `set_drain_time(obj, drain)` | Delay the end of the phase |
-| `get_objection_total(obj = null)` | Outstanding objections at and below `obj` |
-| `get_objection_count(obj = null)` | Outstanding objections raised by `obj` itself |
-| `get_objectors(ref list[$])` | The objects currently objecting |
-| `display_objections(obj = null, show_header = 1)` | Print the objection tree |
-| `trace_mode(1)` | Log every raise and drop for this phase |
+**Visual**
 
-**Notes**
-
-- In UVM 1.2 the variable is no longer part of the documented interface; use `phase.get_objection()`, which exists in the Cadence 1.1d library as well.
-- It is null for function phases, which have no objection.
-
-**See also**: `set_drain_time`, `uvm_objection`, `raise_objection`, `drop_objection`, `uvm_phase`
+<img src="behavior.svg" width="300">

@@ -16,30 +16,6 @@ virtual task post_reset_phase(uvm_phase phase);
 | `reset_phase` | Assert reset, drive interfaces to their idle or reset values, deassert reset |
 | `post_reset_phase` | Wait for the DUT to be ready after reset, for example link training |
 
-**Example**
-
-```systemverilog
-// Test or reset agent
-task reset_phase(uvm_phase phase);
-    phase.raise_objection(this, "applying reset");
-    vif.rst_n <= 1'b0;
-    repeat (5) @(posedge vif.clk);
-    vif.rst_n <= 1'b1;
-    phase.drop_objection(this, "reset released");
-endtask
-
-// Driver: put the interface in a known state
-task reset_phase(uvm_phase phase);
-    vif.wr_drv_cb.wr_en   <= 1'b0;
-    vif.wr_drv_cb.data_in <= '0;
-endtask
-
-// Scoreboard: forget everything on every reset, including a phase jump
-task reset_phase(uvm_phase phase);
-    expected.delete();
-endtask
-```
-
 **Reset in the middle of a test**
 
 ```systemverilog
@@ -63,3 +39,35 @@ endtask
 - Many testbenches do not use the run-time phases at all: they apply reset from the testbench module and do everything else in `run_phase`.
 
 **See also**: `configure_phase`, `main_phase`, `shutdown_phase`, `run_phase`, `uvm_phase`, `uvm_domain`
+
+---
+
+**Coding example**
+
+```systemverilog
+// Test or reset agent
+task reset_phase(uvm_phase phase);
+    phase.raise_objection(this, "applying reset");
+    vif.rst_n <= 1'b0;
+    repeat (5) @(posedge vif.clk);
+    vif.rst_n <= 1'b1;
+    phase.drop_objection(this, "reset released");
+endtask
+
+// Driver: put the interface in a known state
+task reset_phase(uvm_phase phase);
+    vif.wr_drv_cb.wr_en   <= 1'b0;
+    vif.wr_drv_cb.data_in <= '0;
+endtask
+
+// Scoreboard: forget everything on every reset, including a phase jump
+task reset_phase(uvm_phase phase);
+    expected.delete();
+endtask
+```
+
+---
+
+**Visual**
+
+<img src="behavior.svg" width="300">

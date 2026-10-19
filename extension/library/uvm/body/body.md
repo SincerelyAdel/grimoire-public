@@ -8,7 +8,22 @@ The one method every sequence must implement. It runs when the sequence is start
 virtual task body();
 ```
 
-**Example: sending items**
+**Call order around it**
+
+`start()` calls `pre_start()`, then `pre_body()`, then `body()`, then `post_body()`, then `post_start()`. `pre_body` and `post_body` are skipped when the sequence is started with `call_pre_post = 0`, which is what the `` `uvm_do `` macros do for sub-sequences.
+
+**Notes**
+
+- Never call `body()` directly; call `start()`, which sets up the sequencer, the parent and the state first.
+- A `body()` that returns immediately ends the sequence immediately. A `forever` loop makes a sequence that only ends when killed, which suits background or responder sequences.
+- `m_sequencer` is the generic handle to the sequencer the sequence is running on; `p_sequencer` is the typed one, if declared.
+- Keep signal-level timing out of `body()`. A sequence may use delays to space out stimulus, but pin wiggling belongs to the driver.
+
+**See also**: `uvm_sequence`, `start_item`, `finish_item`, `pre_body`, `pre_start`, `uvm_do`, `m_sequencer`, `p_sequencer`
+
+---
+
+**Coding example**
 
 ```systemverilog
 class fifo_wr_seq extends uvm_sequence #(fifo_transaction);
@@ -49,15 +64,8 @@ class fifo_fill_then_drain_seq extends uvm_sequence #(fifo_transaction);
 endclass
 ```
 
-**Call order around it**
+---
 
-`start()` calls `pre_start()`, then `pre_body()`, then `body()`, then `post_body()`, then `post_start()`. `pre_body` and `post_body` are skipped when the sequence is started with `call_pre_post = 0`, which is what the `` `uvm_do `` macros do for sub-sequences.
+**Visual**
 
-**Notes**
-
-- Never call `body()` directly; call `start()`, which sets up the sequencer, the parent and the state first.
-- A `body()` that returns immediately ends the sequence immediately. A `forever` loop makes a sequence that only ends when killed, which suits background or responder sequences.
-- `m_sequencer` is the generic handle to the sequencer the sequence is running on; `p_sequencer` is the typed one, if declared.
-- Keep signal-level timing out of `body()`. A sequence may use delays to space out stimulus, but pin wiggling belongs to the driver.
-
-**See also**: `uvm_sequence`, `start_item`, `finish_item`, `pre_body`, `pre_start`, `uvm_do`, `m_sequencer`, `p_sequencer`
+<img src="behavior.svg" width="300">
