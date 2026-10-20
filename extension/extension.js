@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const lookup = require('./lookup');
 const uvm = require('./uvm');
+const snippets = require('./snippets');
 
 const SV_LANGUAGES = ['systemverilog', 'systemverilogheader', 'verilog', 'verilogheader'];
 const SV_FOLDERS = ['sv', 'uvm'];
@@ -63,6 +64,42 @@ function provideHover(document, position) {
   md.baseUri = vscode.Uri.file(dir + path.sep);
   md.supportHtml = true;
   return new vscode.Hover(md, range);
+}
+
+function snippetDocs(dirs, snippet, need) {
+  const parts = [];
+  const file = snippet.page && lookup.resolve(dirs, snippet.page);
+  if (file) {
+    try {
+      parts.push(lookup.sections(fs.readFileSync(file, 'utf8'))[0]);
+    } catch (err) {}
+  }
+  const head = need.length ? need.join('\n') + '\n\n' : '';
+  parts.push('```systemverilog\n' + head + snippets.preview(snippet.body) + '\n```');
+  return new vscode.MarkdownString(parts.join('\n\n'));
+}
+
+function provideCompletionItems(document, position) {
+  if (!config().get('enabled')) {
+    return undefined;
+  }
+  const dirs = folders(document.languageId);
+  const text = document.getText();
+  return snippets.load(dirs).map((snippet) => {
+    const need = snippets.missing(text, snippet.needs);
+    const item = new vscode.CompletionItem(snippet.name, vscode.CompletionItemKind.Snippet);
+    const insert = new vscode.SnippetString();
+    if (need.length && position.line === 0) {
+      insert.appendText(need.join('\n') + '\n\n');
+    } else if (need.length) {
+      item.additionalTextEdits = [vscode.TextEdit.insert(new vscode.Position(0, 0), need.join('\n') + '\n\n')];
+    }
+    insert.value += snippet.body;
+    item.insertText = insert;
+    item.detail = 'Grimoire snippet';
+    item.documentation = snippetDocs(dirs, snippet, need);
+    return item;
+  });
 }
 
 // ---- UVM for slang: point slang at a UVM library so UVM code compiles without errors ----
@@ -237,6 +274,7 @@ function keepHoverOnTop(context) {
 function activate(context) {
   const state = context.workspaceState;
   keepHoverOnTop(context);
+  context.subscriptions.push(vscode.languages.registerCompletionItemProvider({ scheme: 'file' }, { provideCompletionItems }));
   const syncContext = () => vscode.commands.executeCommand('setContext', 'grimoire.enabled', config().get('enabled'));
   syncContext();
   context.subscriptions.push(

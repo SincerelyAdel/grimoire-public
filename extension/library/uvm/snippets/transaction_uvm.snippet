@@ -1,0 +1,35 @@
+page: uvm_sequence_item
+needs: `include "uvm_macros.svh"
+needs: import uvm_pkg::*;
+---
+class ${1:example}_transaction extends uvm_sequence_item;
+
+    // ── Stimulus ───────────────────────────────────────────────────────────────
+    rand logic [7:0]  data;
+    rand int unsigned delay;
+
+    // ── Response ───────────────────────────────────────────────────────────────
+    bit accepted;
+
+    // ── Constraints ────────────────────────────────────────────────────────────
+    constraint delay_c { delay inside {[0:3]}; }
+
+    // ── Factory Registration ───────────────────────────────────────────────────
+    `uvm_object_utils_begin(${1}_transaction)
+        `uvm_field_int(data,     UVM_ALL_ON)
+        `uvm_field_int(delay,    UVM_ALL_ON | UVM_NOCOMPARE)
+        `uvm_field_int(accepted, UVM_ALL_ON)
+    `uvm_object_utils_end
+
+    // ── Constructor ────────────────────────────────────────────────────────────
+    function new(string name = "${1}_transaction");
+        super.new(name);
+    endfunction
+
+    // ── String Conversion ──────────────────────────────────────────────────────
+    function string convert2string();
+        return $sformatf("data=0x%02h delay=%0d accepted=%0b", data, delay, accepted);
+    endfunction
+
+endclass
+$0

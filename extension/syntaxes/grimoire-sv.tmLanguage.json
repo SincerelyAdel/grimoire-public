@@ -1,0 +1,73 @@
+{
+  "scopeName": "grimoire.systemverilog.injection",
+  "injectionSelector": "L:source.systemverilog -comment -string",
+  "patterns": [
+    {
+      "begin": "(?<!`)(`uvm_field_[A-Za-z0-9_]+)\\s*(\\()\\s*([A-Za-z_][A-Za-z0-9_$]*)?",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.function.macro.systemverilog"
+        },
+        "3": {
+          "name": "variable.other.identifier.systemverilog"
+        }
+      },
+      "end": "\\)",
+      "name": "meta.preprocessor.systemverilog",
+      "patterns": [
+        {
+          "include": "#arguments"
+        }
+      ]
+    },
+    {
+      "begin": "(?<!`)(`uvm_(?:object|component)(?:_param)?_utils(?:_begin)?|`uvm_(?:object|component)_registry|`uvm_declare_p_sequencer)\\s*(\\()\\s*([A-Za-z_][A-Za-z0-9_$]*)?",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.function.macro.systemverilog"
+        },
+        "3": {
+          "name": "entity.name.type.class.systemverilog"
+        }
+      },
+      "end": "\\)",
+      "name": "meta.preprocessor.systemverilog",
+      "patterns": [
+        {
+          "include": "#arguments"
+        }
+      ]
+    },
+    {
+      "match": "(?<![\\w$`])(?:dist|inside|with|intersect|within|first_match|soft)(?![\\w$])",
+      "name": "keyword.control.systemverilog"
+    }
+  ],
+  "repository": {
+    "arguments": {
+      "patterns": [
+        {
+          "include": "source.systemverilog#macro-parens"
+        },
+        {
+          "include": "source.systemverilog#strings"
+        },
+        {
+          "include": "source.systemverilog#comments"
+        },
+        {
+          "include": "source.systemverilog#constants"
+        },
+        {
+          "include": "source.systemverilog#operators"
+        },
+        {
+          "include": "source.systemverilog#system-tf"
+        },
+        {
+          "include": "source.systemverilog#all-types"
+        }
+      ]
+    }
+  }
+}

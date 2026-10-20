@@ -57,8 +57,20 @@ def check_image(tag, src):
 
 def check_folder(folder):
     problems = []
-    tags = sorted(d for d in folder.iterdir() if d.is_dir())
+    tags = sorted(d for d in folder.iterdir() if d.is_dir() and d.name != "snippets")
     pages = {d.name for d in tags}
+    for snippet in sorted((folder / "snippets").glob("*")):
+        text = snippet.read_text(encoding="utf-8")
+        header, dash, body = text.partition("\n---\n")
+        target = re.search(r"^page\s*:\s*(\S+)", header, re.M)
+        if snippet.suffix != ".snippet":
+            problems.append(f"snippets/{snippet.name}: not a .snippet file")
+        elif not dash or not body.strip():
+            problems.append(f"snippets/{snippet.name}: needs a header, a --- line and a body")
+        elif not target or target.group(1) not in pages:
+            problems.append(f"snippets/{snippet.name}: page names no existing page")
+        elif not text.endswith("\n"):
+            problems.append(f"snippets/{snippet.name}: no trailing newline")
     for d in tags:
         if not (d / f"{d.name}.md").is_file():
             problems.append(f"{d.name}/: no {d.name}.md")

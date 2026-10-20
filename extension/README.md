@@ -49,6 +49,12 @@ It adds the UVM location to the workspace's `.slang/local/server.json`, which is
 
 Grimoire's page also stays above slang's own hover when both have something to show.
 
+### UVM snippets
+
+Type `transaction` in a SystemVerilog file and pick `transaction_uvm` to insert a ready-made `uvm_sequence_item` class. Type the name once, such as `fifo`, and it fills in `fifo_transaction` everywhere. The suggestion shows the class's Grimoire page and the code it inserts. If the file does not include `uvm_macros.svh` or import `uvm_pkg` yet, those lines are added at its top.
+
+Names passed to UVM macros get the same colors as where they are declared: the field in `` `uvm_field_int `` and the other `` `uvm_field_* `` macros is colored as a variable, and the class in `` `uvm_object_utils ``, `` `uvm_component_utils ``, their `_begin` and `_param` forms and `` `uvm_declare_p_sequencer `` as a class. The constraint and assertion keywords `inside`, `dist`, `with`, `soft`, `intersect`, `within` and `first_match` are colored as keywords too.
+
 ### Your own pages
 
 Add a folder of Markdown pages, such as your team's coding rules or notes on in-house IP, and they appear on hover next to the built-in ones.
@@ -102,3 +108,22 @@ A subfolder can also hold an `aliases.json` file that points other names at an e
 ```
 
 A page for the exact name always wins over an alias, and a leading backtick is ignored, so `` `uvm_info `` finds `uvm_info.md`.
+
+## Adding your own snippets
+
+A subfolder can also hold a `snippets` folder of `<trigger>.snippet` files. The file name is what you type, and a snippet in your folders wins over a built-in one with the same name. Each file has a `page:` line naming the page shown with the suggestion, a `---` line, then the code in [VS Code snippet syntax](https://code.visualstudio.com/docs/editor/userdefinedsnippets#_snippet-syntax):
+
+Optional `needs:` lines name lines the code depends on. Any that the file does not have yet are added at its top, so slang finds UVM's macros and classes:
+
+```text
+page: uvm_sequence_item
+needs: `include "uvm_macros.svh"
+needs: import uvm_pkg::*;
+---
+class ${1:my}_transaction extends uvm_sequence_item;
+  `uvm_object_utils(${1}_transaction)
+endclass
+$0
+```
+
+System tasks such as `$display` are inserted as written.

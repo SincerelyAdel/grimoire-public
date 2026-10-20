@@ -27,11 +27,13 @@
   "files": [
     "extension.js",
     "lookup.js",
+    "snippets.js",
     "uvm.js",
     "icon.png",
     "LICENSE.txt",
     "README.md",
     "CHANGELOG.md",
+    "syntaxes/**",
     "library/**",
     "uvm-core/src/**",
     "uvm-core/LICENSE.txt",
@@ -95,7 +97,16 @@
           "description": "Extra documentation folders, searched before the built-in SystemVerilog and UVM pages. Each holds subfolders of <name>.md pages; the sv and uvm subfolders apply only to SystemVerilog files, any other subfolder to every file."
         }
       }
-    }
+    },
+    "grammars": [
+      {
+        "scopeName": "grimoire.systemverilog.injection",
+        "path": "./syntaxes/grimoire-sv.tmLanguage.json",
+        "injectTo": [
+          "source.systemverilog"
+        ]
+      }
+    ]
   },
   "license": "MIT",
   "repository": {
