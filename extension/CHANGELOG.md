@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.6
+
+- New snippets for a two-sided UVM VIP, such as a FIFO: interface, package, sequencer, write and read sequences, drivers, monitors and agents, a scoreboard and an environment, all named from one prefix.
+- `transaction_uvm` now steps through the data width, field names and delay limit with Tab.
+- Snippets can show `note:` lines with the suggestion for setup the code relies on.
+- New command: **Grimoire: Create Slang Config** writes `.slang/server.json` with the folders slang should not check, such as build output and vendored IP.
+- The UVM setup no longer adds the whole workspace to `.slang/local/server.json`, so folders excluded in `.slang/server.json` stay excluded.
+
 ## 1.0.5
 
 - Slang is set up for UVM automatically in workspaces that use it, from `UVM_HOME` or the bundled Accellera UVM 2020.3.1, so UVM code completes without errors.
