@@ -28,6 +28,7 @@
     "extension.js",
     "lookup.js",
     "snippets.js",
+    "slang.js",
     "uvm.js",
     "icon.png",
     "LICENSE.txt",
@@ -61,6 +62,11 @@
         "command": "grimoire.setUvmPath",
         "title": "Set UVM Path",
         "category": "Grimoire"
+      },
+      {
+        "command": "grimoire.createSlangConfig",
+        "title": "Create Slang Config",
+        "category": "Grimoire"
       }
     ],
     "menus": {
@@ -72,6 +78,10 @@
         {
           "command": "grimoire.disable",
           "when": "grimoire.enabled"
+        },
+        {
+          "command": "grimoire.createSlangConfig",
+          "when": "grimoire.enabled && workspaceFolderCount > 0"
         }
       ]
     },

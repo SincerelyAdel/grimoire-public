@@ -49,6 +49,10 @@ It adds the UVM location to the workspace's `.slang/local/server.json`, which is
 
 Grimoire's page also stays above slang's own hover when both have something to show.
 
+### Slang config for your project
+
+By default slang checks every SystemVerilog file in the workspace, including build output and third-party IP. **Grimoire: Create Slang Config** writes `.slang/server.json`, slang's shared project config, with the folders slang should skip. It lists the folders that hold SystemVerilog and checks build output and vendored code, meaning folders with their own `LICENSE`, `COPYING` or `.git`, then opens the file and restarts slang. A workspace that already has `.slang/server.json` is left alone. The UVM location stays in `.slang/local/server.json`, so the shared file can be committed.
+
 ### UVM snippets
 
 Type `transaction` in a SystemVerilog file and pick `transaction_uvm` to insert a ready-made `uvm_sequence_item` class. Type the name once, such as `fifo`, and it fills in `fifo_transaction` everywhere. Press Tab to move on to the data width, each field name and the delay limit; each name is filled in everywhere it is used. The suggestion shows the class's Grimoire page and the code it inserts.
@@ -86,6 +90,7 @@ The SystemVerilog and UVM pages are built in, so hover help works straight away.
 | Command | What it does |
 | --- | --- |
 | **Grimoire: Set UVM Path** | Choose the UVM library slang uses, or go back to automatic: `UVM_HOME`, else the bundled UVM. Shows which one is in use. |
+| **Grimoire: Create Slang Config** | Write `.slang/server.json` with the folders slang should not check. |
 | **Grimoire: Disable** | Turn off Grimoire's hovers and its slang setup. |
 | **Grimoire: Enable** | Turn them back on. |
 

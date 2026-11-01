@@ -40,8 +40,7 @@ function mentionsUvm(config) {
 }
 
 // Add the UVM include path and index folder to a slang config, replacing the ones Grimoire wrote before.
-// keepWorkspace: also index the workspace itself, for configs that would otherwise index only UVM.
-function wire(config, dir, previous, keepWorkspace) {
+function wire(config, dir, previous) {
   const out = { ...(config || {}) };
   const old = previous && slash(previous);
   const flag = `+incdir+${slash(dir)}`;
@@ -52,16 +51,15 @@ function wire(config, dir, previous, keepWorkspace) {
   out.flags = flags.join(' ');
   const index = (Array.isArray(out.index) ? out.index : [])
     .map((e) => ({ ...e, dirs: (e.dirs || []).filter((d) => !old || slash(d) !== old) }))
-    .filter((e) => e.dirs.length);
-  if (keepWorkspace && !index.some((e) => e.dirs.includes('.'))) {
-    index.unshift({ dirs: ['.'] });
-  }
+    .filter((e) => e.dirs.length && !isWorkspaceOnly(e));
   if (!index.some((e) => e.dirs.some((d) => slash(d) === slash(dir)))) {
     index.push({ dirs: [slash(dir)] });
   }
   out.index = index;
   return out;
 }
+
+const isWorkspaceOnly = (e) => e.dirs.length === 1 && e.dirs[0] === '.' && Object.keys(e).length === 1;
 
 const UVM_USE = /\buvm_pkg\b|uvm_macros\.svh/;
 

@@ -38,20 +38,24 @@ assert.ok(uvm.mentionsUvm({ index: [{ dirs: ['/opt/UVM/src'] }] }));
 assert.ok(!uvm.mentionsUvm({ flags: '-DSIM' }));
 assert.ok(!uvm.mentionsUvm(undefined));
 
-// wire: a fresh config indexes the workspace and UVM
-assert.deepStrictEqual(uvm.wire(undefined, 'C:\\uvm\\src', undefined, true), {
+// wire: a fresh config indexes only UVM, which slang adds to its default workspace scan
+assert.deepStrictEqual(uvm.wire(undefined, 'C:\\uvm\\src', undefined), {
   flags: '+incdir+C:/uvm/src',
-  index: [{ dirs: ['.'] }, { dirs: ['C:/uvm/src'] }],
+  index: [{ dirs: ['C:/uvm/src'] }],
 });
 // wire keeps the user's own flags and index entries, and replaces only what it wrote before
 const mine = { flags: '-DSIM +incdir+C:/old/src', index: [{ dirs: ['rtl'], excludeDirs: ['build'] }, { dirs: ['C:/old/src'] }] };
-assert.deepStrictEqual(uvm.wire(mine, 'C:/new/src', 'C:\\old\\src', false), {
+assert.deepStrictEqual(uvm.wire(mine, 'C:/new/src', 'C:\\old\\src'), {
   flags: '-DSIM +incdir+C:/new/src',
   index: [{ dirs: ['rtl'], excludeDirs: ['build'] }, { dirs: ['C:/new/src'] }],
 });
+const legacy = { flags: '+incdir+C:/uvm/src', index: [{ dirs: ['.'] }, { dirs: ['C:/uvm/src'] }] };
+assert.deepStrictEqual(uvm.wire(legacy, 'C:/uvm/src', 'C:/uvm/src'), { flags: '+incdir+C:/uvm/src', index: [{ dirs: ['C:/uvm/src'] }] });
+const scoped = { index: [{ dirs: ['.'], excludeDirs: ['vendor'] }] };
+assert.deepStrictEqual(uvm.wire(scoped, 'C:/uvm/src', undefined).index, [{ dirs: ['.'], excludeDirs: ['vendor'] }, { dirs: ['C:/uvm/src'] }]);
 // wiring twice changes nothing
-const once = uvm.wire(undefined, 'C:/uvm/src', undefined, true);
-assert.deepStrictEqual(uvm.wire(once, 'C:/uvm/src', 'C:/uvm/src', true), once);
+const once = uvm.wire(undefined, 'C:/uvm/src', undefined);
+assert.deepStrictEqual(uvm.wire(once, 'C:/uvm/src', 'C:/uvm/src'), once);
 
 fs.rmSync(tmp, { recursive: true });
 console.log('uvm tests passed');

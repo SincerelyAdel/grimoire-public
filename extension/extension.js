@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const lookup = require('./lookup');
 const uvm = require('./uvm');
+const slang = require('./slang');
 const snippets = require('./snippets');
 
 const SV_LANGUAGES = ['systemverilog', 'systemverilogheader', 'verilog', 'verilogheader'];
@@ -74,10 +75,10 @@ function snippetDocs(dirs, snippet, need) {
       parts.push(lookup.sections(fs.readFileSync(file, 'utf8'))[0]);
     } catch (err) {}
   }
-  const head = need.length ? need.join('\n') + '\n\n' : '';
   if (snippet.notes.length) {
     parts.push(snippet.notes.map((note) => '- ' + snippets.preview(note, snippet.body)).join('\n'));
   }
+  const head = need.length ? need.join('\n') + '\n\n' : '';
   parts.push('```systemverilog\n' + head + snippets.preview(snippet.body) + '\n```');
   return new vscode.MarkdownString(parts.join('\n\n'));
 }
@@ -146,10 +147,8 @@ async function wireFolder(folder, state, chosenByUser) {
   if (!pick.dir) {
     return false;
   }
-  const base = uvm.readJson(path.join(slangDir, 'server.json'));
   const before = uvm.readJson(localFile);
-  const keepWorkspace = !(base && base.index) && !(before && before.index && before.index.length);
-  const after = uvm.wire(before, pick.dir, previous, keepWorkspace);
+  const after = uvm.wire(before, pick.dir, previous);
   await state.update(key, pick.dir);
   if (JSON.stringify(after) === JSON.stringify(before)) {
     return false;
@@ -221,6 +220,45 @@ async function setUvmPath(state) {
   }
 }
 
+async function createSlangConfig() {
+  if (!config().get('enabled')) {
+    return;
+  }
+  const open = vscode.workspace.workspaceFolders || [];
+  if (!open.length) {
+    vscode.window.showWarningMessage('Grimoire: open a folder first. Slang reads its settings from the workspace folder.');
+    return;
+  }
+  const folder = open.length === 1 ? open[0] : await vscode.window.showWorkspaceFolderPick({ placeHolder: 'Folder to create the slang config in' });
+  if (!folder) {
+    return;
+  }
+  const file = path.join(folder.uri.fsPath, '.slang', 'server.json');
+  if (fs.existsSync(file)) {
+    const choice = await vscode.window.showInformationMessage(`Grimoire: ${folder.name} already has a slang config.`, 'Open It');
+    if (choice) {
+      await vscode.window.showTextDocument(vscode.Uri.file(file));
+    }
+    return;
+  }
+  const candidates = slang.candidateExcludes(folder.uri.fsPath);
+  let excludes = [];
+  if (candidates.length) {
+    const picked = await vscode.window.showQuickPick(
+      candidates.map((c) => ({ label: c.dir, description: c.reason, picked: c.picked })),
+      { canPickMany: true, placeHolder: 'Folders slang should not index (build output and vendored code are checked)' }
+    );
+    if (!picked) {
+      return;
+    }
+    excludes = picked.map((p) => p.label);
+  }
+  fs.mkdirSync(path.dirname(file), { recursive: true });
+  fs.writeFileSync(file, JSON.stringify(slang.buildConfig(excludes), null, 2) + '\n');
+  vscode.commands.executeCommand('slang.restartLanguageServer').then(undefined, () => {});
+  await vscode.window.showTextDocument(vscode.Uri.file(file));
+}
+
 async function setEnabled(on) {
   await config().update('enabled', on, vscode.ConfigurationTarget.Global);
   vscode.window.showInformationMessage(on ? 'Grimoire is enabled.' : 'Grimoire is disabled. Run "Grimoire: Enable" to turn it back on.');
@@ -284,6 +322,7 @@ function activate(context) {
     vscode.commands.registerCommand('grimoire.enable', () => setEnabled(true)),
     vscode.commands.registerCommand('grimoire.disable', () => setEnabled(false)),
     vscode.commands.registerCommand('grimoire.setUvmPath', () => setUvmPath(state)),
+    vscode.commands.registerCommand('grimoire.createSlangConfig', () => createSlangConfig()),
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (e.affectsConfiguration('grimoire.enabled')) {
         syncContext();

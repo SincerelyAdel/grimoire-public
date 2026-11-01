@@ -22,6 +22,7 @@ python3 tools/animate.py
 python3 tools/check_library.py
 node tests/lookup_test.js
 node tests/uvm_test.js
+node tests/slang_test.js
 node tests/snippets_test.js
 cd extension
 npx @vscode/vsce package --no-dependencies -o ../adels-grimoire.vsix
