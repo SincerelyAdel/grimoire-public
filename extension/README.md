@@ -51,7 +51,22 @@ Grimoire's page also stays above slang's own hover when both have something to s
 
 ### UVM snippets
 
-Type `transaction` in a SystemVerilog file and pick `transaction_uvm` to insert a ready-made `uvm_sequence_item` class. Type the name once, such as `fifo`, and it fills in `fifo_transaction` everywhere. The suggestion shows the class's Grimoire page and the code it inserts. If the file does not include `uvm_macros.svh` or import `uvm_pkg` yet, those lines are added at its top.
+Type `transaction` in a SystemVerilog file and pick `transaction_uvm` to insert a ready-made `uvm_sequence_item` class. Type the name once, such as `fifo`, and it fills in `fifo_transaction` everywhere. Press Tab to move on to the data width, each field name and the delay limit; each name is filled in everywhere it is used. The suggestion shows the class's Grimoire page and the code it inserts.
+
+Type `sequence` and pick `wr_sequence_uvm` or `rd_sequence_uvm` for a write or read sequence of those transactions, with random `num_items` and `max_delay` knobs that set how many items it sends and the largest `delay` they get.
+
+The rest of a two-sided VIP, such as a FIFO with a write side and a read side, comes from these snippets. Each takes the same name. Snippets for one side come as a `wr_` and an `rd_` pair; the others cover both sides, which default to `wr` and `rd`:
+
+| Snippet | Inserts |
+| --- | --- |
+| `if_uvm` | Interface with signals and driver and monitor clocking blocks for both sides |
+| `pkg_uvm` | VIP package that imports UVM and includes every file in order |
+| `sequencer_uvm` | Sequencer `typedef` for the transaction |
+| `wr_driver_uvm`, `rd_driver_uvm` | Driver that waits for reset, then drives each item after its `delay`; the write driver also drives the data |
+| `wr_monitor_uvm`, `rd_monitor_uvm` | Monitor that samples each transfer and writes it to its analysis port, with `accepted` from `full` or `empty` |
+| `wr_agent_uvm`, `rd_agent_uvm` | Agent with sequencer, driver and monitor, building the driver only when active |
+| `scoreboard_uvm` | In-order scoreboard: values from one side must come back from the other in the same order |
+| `env_uvm` | Environment with both agents and the scoreboard, connected |
 
 Names passed to UVM macros get the same colors as where they are declared: the field in `` `uvm_field_int `` and the other `` `uvm_field_* `` macros is colored as a variable, and the class in `` `uvm_object_utils ``, `` `uvm_component_utils ``, their `_begin` and `_param` forms and `` `uvm_declare_p_sequencer `` as a class. The constraint and assertion keywords `inside`, `dist`, `with`, `soft`, `intersect`, `within` and `first_match` are colored as keywords too.
 
@@ -127,3 +142,5 @@ $0
 ```
 
 System tasks such as `$display` are inserted as written.
+
+Optional `note:` lines are shown with the suggestion, with placeholders filled in, and are never inserted. Use them for setup the code relies on, such as `note: ${1}_vip_pkg compiled first`.

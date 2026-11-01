@@ -1,0 +1,41 @@
+page: uvm_agent
+note: the ${1}_sequencer, wr_driver_uvm and wr_monitor_uvm snippets
+---
+class ${1:example}_wr_agent extends uvm_agent;
+
+    // ── Components ─────────────────────────────────────────────────────────────
+    ${1}_sequencer  sqr;
+    ${1}_wr_driver  drv;
+    ${1}_wr_monitor mon;
+
+    // ── Analysis Port ──────────────────────────────────────────────────────────
+    uvm_analysis_port #(${1}_transaction) ap;
+
+    // ── Factory Registration ───────────────────────────────────────────────────
+    `uvm_component_utils(${1}_wr_agent)
+
+    // ── Constructor ────────────────────────────────────────────────────────────
+    function new(string name, uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    // ── Build ──────────────────────────────────────────────────────────────────
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        mon = ${1}_wr_monitor::type_id::create("mon", this);
+        if (get_is_active() == UVM_ACTIVE) begin
+            sqr = ${1}_sequencer::type_id::create("sqr", this);
+            drv = ${1}_wr_driver::type_id::create("drv", this);
+        end
+    endfunction
+
+    // ── Connect ────────────────────────────────────────────────────────────────
+    function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
+        ap = mon.ap;
+        if (get_is_active() == UVM_ACTIVE)
+            drv.seq_item_port.connect(sqr.seq_item_export);
+    endfunction
+
+endclass
+$0

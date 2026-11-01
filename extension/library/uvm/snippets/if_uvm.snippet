@@ -1,0 +1,45 @@
+page: interface
+---
+interface ${1:example}_if #(
+    parameter int DATA_W = 8
+) (
+    input logic clk,
+    input logic rst_n
+);
+
+    // ── Write Side ─────────────────────────────────────────────────────────────
+    logic              ${2:wr}_en;
+    logic [DATA_W-1:0] ${2}_data;
+    logic              ${4:full};
+
+    // ── Read Side ──────────────────────────────────────────────────────────────
+    logic              ${3:rd}_en;
+    logic [DATA_W-1:0] ${3}_data;
+    logic              ${5:empty};
+
+    // ── Write Driver Clocking ──────────────────────────────────────────────────
+    clocking ${2}_drv_cb @(posedge clk);
+        default input #1step output #1;
+        output ${2}_en, ${2}_data;
+    endclocking
+
+    // ── Read Driver Clocking ───────────────────────────────────────────────────
+    clocking ${3}_drv_cb @(posedge clk);
+        default input #1step output #1;
+        output ${3}_en;
+    endclocking
+
+    // ── Write Monitor Clocking ─────────────────────────────────────────────────
+    clocking ${2}_mon_cb @(posedge clk);
+        default input #1step;
+        input ${2}_en, ${2}_data, ${4};
+    endclocking
+
+    // ── Read Monitor Clocking ──────────────────────────────────────────────────
+    clocking ${3}_mon_cb @(posedge clk);
+        default input #1step;
+        input ${3}_en, ${3}_data, ${5};
+    endclocking
+
+endinterface
+$0

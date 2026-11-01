@@ -10,6 +10,7 @@ REFERENCE = re.compile(r"`([A-Za-z_][\w$]*)`")
 IMAGE = re.compile(r"""!\[[^\]]*\]\(([^)\s]+)|<img[^>]*\ssrc=["']([^"']+)["']""")
 WHOLE_IMAGE = re.compile(r"!\[[^\]]*\]\([^)]*\)|<img[^>]*>")
 THEMES = ("dark", "light")
+ALL_PAGES = {d.name for d in LIBRARY.glob("*/*") if d.is_dir() and d.name != "snippets"}
 
 
 def sections(text):
@@ -67,7 +68,7 @@ def check_folder(folder):
             problems.append(f"snippets/{snippet.name}: not a .snippet file")
         elif not dash or not body.strip():
             problems.append(f"snippets/{snippet.name}: needs a header, a --- line and a body")
-        elif not target or target.group(1) not in pages:
+        elif not target or target.group(1) not in ALL_PAGES:
             problems.append(f"snippets/{snippet.name}: page names no existing page")
         elif not text.endswith("\n"):
             problems.append(f"snippets/{snippet.name}: no trailing newline")

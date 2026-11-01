@@ -1,0 +1,44 @@
+page: uvm_sequence
+note: the ${1}_transaction snippet, with a ${6} field
+---
+class ${1:example}_rd_seq extends uvm_sequence #(${1}_transaction);
+
+    // ── Knobs ──────────────────────────────────────────────────────────────────
+    rand int unsigned ${2:num_items};
+    rand int unsigned ${3:max_delay};
+
+    // ── Constraints ────────────────────────────────────────────────────────────
+    constraint ${2}_c { ${2} inside {[1:${4:32}]}; }
+    constraint ${3}_c { ${3} inside {[0:${5:3}]}; }
+
+    // ── Factory Registration ───────────────────────────────────────────────────
+    `uvm_object_utils_begin(${1}_rd_seq)
+        `uvm_field_int(${2}, UVM_ALL_ON)
+        `uvm_field_int(${3}, UVM_ALL_ON)
+    `uvm_object_utils_end
+
+    // ── Constructor ────────────────────────────────────────────────────────────
+    function new(string name = "${1}_rd_seq");
+        super.new(name);
+    endfunction
+
+    // ── String Conversion ──────────────────────────────────────────────────────
+    function string convert2string();
+        return $sformatf("${2}=%0d ${3}=%0d", ${2}, ${3});
+    endfunction
+
+    // ── Body ───────────────────────────────────────────────────────────────────
+    task body();
+        ${1}_transaction item;
+
+        repeat (${2}) begin
+            item = ${1}_transaction::type_id::create("item");
+            start_item(item);
+            if (!item.randomize() with { ${6:delay} <= local::${3}; })
+                `uvm_fatal("RNDFAIL", "read item randomization failed")
+            finish_item(item);
+        end
+    endtask
+
+endclass
+$0

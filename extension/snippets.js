@@ -13,17 +13,17 @@ function parse(text) {
   const lines = text.replace(/\r\n/g, '\n').split('\n');
   const end = lines.findIndex((line) => /^---\s*$/.test(line));
   const fields = {};
-  const needs = [];
+  const lists = { needs: [], note: [] };
   for (const line of end < 0 ? [] : lines.slice(0, end)) {
     const m = /^(\w+)\s*:\s*(.*?)\s*$/.exec(line);
-    if (m && m[1] === 'needs') {
-      needs.push(m[2]);
+    if (m && m[1] in lists) {
+      lists[m[1]].push(m[2]);
     } else if (m) {
       fields[m[1]] = m[2];
     }
   }
   const body = (end < 0 ? lines : lines.slice(end + 1)).join('\n').replace(/\s+$/, '');
-  return { page: fields.page, needs, body: escape(body) };
+  return { page: fields.page, needs: lists.needs, notes: lists.note, body: escape(body) };
 }
 
 const squash = (text) => text.replace(/\s+/g, '');
@@ -78,14 +78,14 @@ function load(dirs) {
   return [...found.values()];
 }
 
-function preview(body) {
+function preview(body, source = body) {
   const defaults = {};
-  body.replace(/\$\{(\d+):([^}]*)\}/g, (m, n, d) => {
+  source.replace(/\$\{(\d+):([^}]*)\}/g, (m, n, d) => {
     if (!(n in defaults)) {
       defaults[n] = d;
     }
   });
-  body.replace(/\$\{(\d+)\|([^,|]*)/g, (m, n, d) => {
+  source.replace(/\$\{(\d+)\|([^,|]*)/g, (m, n, d) => {
     if (!(n in defaults)) {
       defaults[n] = d;
     }

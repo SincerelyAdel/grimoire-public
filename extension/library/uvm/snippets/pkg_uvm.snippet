@@ -1,0 +1,23 @@
+page: uvm_pkg
+note: compile ${1}_if.sv before the package, and add +incdir to the VIP folder
+---
+package ${1:example}_vip_pkg;
+
+    import uvm_pkg::*;
+    `include "uvm_macros.svh"
+
+    `include "objects/${1}_transaction.sv"
+    `include "agent/${1}_sequencer.sv"
+    `include "agent/${1}_${2:wr}_driver.sv"
+    `include "agent/${1}_${3:rd}_driver.sv"
+    `include "agent/${1}_${2}_monitor.sv"
+    `include "agent/${1}_${3}_monitor.sv"
+    `include "agent/${1}_${2}_agent.sv"
+    `include "agent/${1}_${3}_agent.sv"
+    `include "env/${1}_scoreboard.sv"
+    `include "env/${1}_env.sv"
+    `include "sequences/${1}_${2}_seq.sv"
+    `include "sequences/${1}_${3}_seq.sv"
+
+endpackage
+$0

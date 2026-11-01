@@ -1,0 +1,44 @@
+page: uvm_monitor
+---
+class ${1:example}_wr_monitor extends uvm_monitor;
+
+    // ── Interface ──────────────────────────────────────────────────────────────
+    virtual ${1}_if vif;
+
+    // ── Analysis Port ──────────────────────────────────────────────────────────
+    uvm_analysis_port #(${1}_transaction) ap;
+
+    // ── Factory Registration ───────────────────────────────────────────────────
+    `uvm_component_utils(${1}_wr_monitor)
+
+    // ── Constructor ────────────────────────────────────────────────────────────
+    function new(string name, uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    // ── Build ──────────────────────────────────────────────────────────────────
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        ap = new("ap", this);
+        if (!uvm_config_db #(virtual ${1}_if)::get(this, "", "vif", vif))
+            `uvm_fatal("NOVIF", "${1}_if not found in config_db")
+    endfunction
+
+    // ── Run ────────────────────────────────────────────────────────────────────
+    task run_phase(uvm_phase phase);
+        ${1}_transaction item;
+        wait (vif.rst_n === 1'b1);
+        forever begin
+            @(vif.wr_mon_cb);
+            if (vif.wr_mon_cb.wr_en) begin
+                item          = ${1}_transaction::type_id::create("item");
+                item.${2:data}     = vif.wr_mon_cb.wr_${2};
+                item.${3:accepted} = !vif.wr_mon_cb.${4:full};
+                `uvm_info("MON", item.convert2string(), UVM_HIGH)
+                ap.write(item);
+            end
+        end
+    endtask
+
+endclass
+$0

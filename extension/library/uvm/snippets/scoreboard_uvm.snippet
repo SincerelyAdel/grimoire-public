@@ -1,0 +1,81 @@
+page: uvm_scoreboard
+note: values from ${2} are expected back from ${3} in the same order
+---
+// ── Analysis Import Declarations ───────────────────────────────────────────────
+`uvm_analysis_imp_decl(_${2:wr})
+`uvm_analysis_imp_decl(_${3:rd})
+
+class ${1:example}_scoreboard extends uvm_scoreboard;
+
+    // ── Analysis Imports ───────────────────────────────────────────────────────
+    uvm_analysis_imp_${2} #(${1}_transaction, ${1}_scoreboard) ${2}_export;
+    uvm_analysis_imp_${3} #(${1}_transaction, ${1}_scoreboard) ${3}_export;
+
+    // ── Reference Model ────────────────────────────────────────────────────────
+    logic [${4:7}:0] model [$];
+
+    // ── Counters ───────────────────────────────────────────────────────────────
+    int unsigned n_match;
+    int unsigned n_mismatch;
+
+    // ── Factory Registration ───────────────────────────────────────────────────
+    `uvm_component_utils(${1}_scoreboard)
+
+    // ── Constructor ────────────────────────────────────────────────────────────
+    function new(string name, uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    // ── Build ──────────────────────────────────────────────────────────────────
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        ${2}_export = new("${2}_export", this);
+        ${3}_export = new("${3}_export", this);
+    endfunction
+
+    // ── Expected Side ──────────────────────────────────────────────────────────
+    function void write_${2}(${1}_transaction t);
+        if (t.${5:accepted})
+            model.push_back(t.${6:data});
+    endfunction
+
+    // ── Actual Side ────────────────────────────────────────────────────────────
+    function void write_${3}(${1}_transaction t);
+        logic [${4}:0] expected;
+
+        if (!t.${5})
+            return;
+        if (model.size() == 0) begin
+            `uvm_error("UNDERFLOW", $sformatf("got 0x%0h but model is empty", t.${6}))
+            return;
+        end
+
+        expected = model.pop_front();
+        if (t.${6} === expected) begin
+            n_match++;
+            `uvm_info("MATCH", $sformatf("0x%0h", t.${6}), UVM_HIGH)
+        end
+        else begin
+            n_mismatch++;
+            `uvm_error("MISMATCH", $sformatf("expected 0x%0h got 0x%0h", expected, t.${6}))
+        end
+    endfunction
+
+    // ── Check ──────────────────────────────────────────────────────────────────
+    function void check_phase(uvm_phase phase);
+        super.check_phase(phase);
+        if (n_match == 0)
+            `uvm_error("NOCHECK", "nothing was compared")
+        if (model.size() != 0)
+            `uvm_error("UNCHECKED", $sformatf("%0d expected values were never compared", model.size()))
+    endfunction
+
+    // ── Report ─────────────────────────────────────────────────────────────────
+    function void report_phase(uvm_phase phase);
+        super.report_phase(phase);
+        `uvm_info("SCB", $sformatf("matches=%0d mismatches=%0d left_in_model=%0d",
+                                   n_match, n_mismatch, model.size()), UVM_NONE)
+    endfunction
+
+endclass
+$0

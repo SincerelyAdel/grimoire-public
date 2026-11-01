@@ -75,6 +75,9 @@ function snippetDocs(dirs, snippet, need) {
     } catch (err) {}
   }
   const head = need.length ? need.join('\n') + '\n\n' : '';
+  if (snippet.notes.length) {
+    parts.push(snippet.notes.map((note) => '- ' + snippets.preview(note, snippet.body)).join('\n'));
+  }
   parts.push('```systemverilog\n' + head + snippets.preview(snippet.body) + '\n```');
   return new vscode.MarkdownString(parts.join('\n\n'));
 }

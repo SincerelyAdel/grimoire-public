@@ -1,0 +1,35 @@
+page: uvm_env
+note: the ${1}_${2}_agent, ${1}_${3}_agent and ${1}_scoreboard snippets
+---
+class ${1:example}_env extends uvm_env;
+
+    // ── Components ─────────────────────────────────────────────────────────────
+    ${1}_${2:wr}_agent   ${2}_agent;
+    ${1}_${3:rd}_agent   ${3}_agent;
+    ${1}_scoreboard sb;
+
+    // ── Factory Registration ───────────────────────────────────────────────────
+    `uvm_component_utils(${1}_env)
+
+    // ── Constructor ────────────────────────────────────────────────────────────
+    function new(string name, uvm_component parent);
+        super.new(name, parent);
+    endfunction
+
+    // ── Build ──────────────────────────────────────────────────────────────────
+    function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        ${2}_agent = ${1}_${2}_agent::type_id::create("${2}_agent", this);
+        ${3}_agent = ${1}_${3}_agent::type_id::create("${3}_agent", this);
+        sb       = ${1}_scoreboard::type_id::create("sb", this);
+    endfunction
+
+    // ── Connect ────────────────────────────────────────────────────────────────
+    function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
+        ${2}_agent.ap.connect(sb.${2}_export);
+        ${3}_agent.ap.connect(sb.${3}_export);
+    endfunction
+
+endclass
+$0
